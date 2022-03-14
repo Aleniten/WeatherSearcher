@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-WeatherSearcher-WeatherSearcherUITests/Pods-WeatherSearcher-WeatherSearcherUITests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
+${BUILT_PRODUCTS_DIR}/Resolver/Resolver.framework
