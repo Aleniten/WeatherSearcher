@@ -8,6 +8,7 @@ target 'WeatherSearcher' do
   # Pods for WeatherSearcher
 	pod 'Alamofire', '~> 5.5'
 	pod 'Resolver'
+	pod 'AlamofireObjectMapper', '~> 5.2'
 
   target 'WeatherSearcherTests' do
     inherit! :search_paths
