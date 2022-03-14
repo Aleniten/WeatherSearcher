@@ -16,6 +16,12 @@
 		7348A41127DF9DD10091D559 /* WeatherSearcherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A41027DF9DD10091D559 /* WeatherSearcherUITests.swift */; };
 		7348A41327DF9DD10091D559 /* WeatherSearcherUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A41227DF9DD10091D559 /* WeatherSearcherUITestsLaunchTests.swift */; };
 		7348A42A27DFA50C0091D559 /* WeatherRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A42927DFA50C0091D559 /* WeatherRepository.swift */; };
+		7348A42C27DFB2490091D559 /* CitiesEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A42B27DFB2490091D559 /* CitiesEntity.swift */; };
+		7348A42E27DFB2950091D559 /* CityEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A42D27DFB2950091D559 /* CityEntity.swift */; };
+		7348A43627DFCBA50091D559 /* CityDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A43527DFCBA50091D559 /* CityDTO.swift */; };
+		7348A43A27DFD77C0091D559 /* CityDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A43927DFD77C0091D559 /* CityDetails.swift */; };
+		7348A43C27DFDA8C0091D559 /* CityDetailsDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A43B27DFDA8C0091D559 /* CityDetailsDTO.swift */; };
+		7348A44027DFDD540091D559 /* ConsolidatedWeatherDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A43F27DFDD540091D559 /* ConsolidatedWeatherDTO.swift */; };
 		BAC2C525687E99F9F2B6876C /* Pods_WeatherSearcher_WeatherSearcherUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 024330BB7AE35958746E3EFB /* Pods_WeatherSearcher_WeatherSearcherUITests.framework */; };
 		F295224FAC3289F34373A26F /* Pods_WeatherSearcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8F53E1A21051A6E6A70921E /* Pods_WeatherSearcher.framework */; };
 /* End PBXBuildFile section */
@@ -56,6 +62,12 @@
 		7348A41027DF9DD10091D559 /* WeatherSearcherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSearcherUITests.swift; sourceTree = "<group>"; };
 		7348A41227DF9DD10091D559 /* WeatherSearcherUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherSearcherUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7348A42927DFA50C0091D559 /* WeatherRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRepository.swift; sourceTree = "<group>"; };
+		7348A42B27DFB2490091D559 /* CitiesEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitiesEntity.swift; sourceTree = "<group>"; };
+		7348A42D27DFB2950091D559 /* CityEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityEntity.swift; sourceTree = "<group>"; };
+		7348A43527DFCBA50091D559 /* CityDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityDTO.swift; sourceTree = "<group>"; };
+		7348A43927DFD77C0091D559 /* CityDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityDetails.swift; sourceTree = "<group>"; };
+		7348A43B27DFDA8C0091D559 /* CityDetailsDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityDetailsDTO.swift; sourceTree = "<group>"; };
+		7348A43F27DFDD540091D559 /* ConsolidatedWeatherDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsolidatedWeatherDTO.swift; sourceTree = "<group>"; };
 		C8F53E1A21051A6E6A70921E /* Pods_WeatherSearcher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherSearcher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4084FEF5F4940CB3E8EE219 /* Pods-WeatherSearcher-WeatherSearcherUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherSearcher-WeatherSearcherUITests.release.xcconfig"; path = "Target Support Files/Pods-WeatherSearcher-WeatherSearcherUITests/Pods-WeatherSearcher-WeatherSearcherUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F72AC46058F2A76637A113F0 /* Pods_WeatherSearcherTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherSearcherTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,7 +149,7 @@
 		7348A3EE27DF9DC90091D559 /* WeatherSearcher */ = {
 			isa = PBXGroup;
 			children = (
-				7348A42627DFA27D0091D559 /* Dara */,
+				7348A42627DFA27D0091D559 /* Data */,
 				7348A42327DFA2220091D559 /* Presentation */,
 				7348A41F27DFA1DE0091D559 /* Domain */,
 				7348A3FD27DF9DD00091D559 /* Info.plist */,
@@ -175,6 +187,9 @@
 		7348A42027DFA1F80091D559 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				7348A42B27DFB2490091D559 /* CitiesEntity.swift */,
+				7348A42D27DFB2950091D559 /* CityEntity.swift */,
+				7348A43927DFD77C0091D559 /* CityDetails.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -220,18 +235,21 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		7348A42627DFA27D0091D559 /* Dara */ = {
+		7348A42627DFA27D0091D559 /* Data */ = {
 			isa = PBXGroup;
 			children = (
 				7348A42827DFA2870091D559 /* Repository */,
 				7348A42727DFA2820091D559 /* DTO */,
 			);
-			path = Dara;
+			path = Data;
 			sourceTree = "<group>";
 		};
 		7348A42727DFA2820091D559 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
+				7348A43527DFCBA50091D559 /* CityDTO.swift */,
+				7348A43B27DFDA8C0091D559 /* CityDetailsDTO.swift */,
+				7348A43F27DFDD540091D559 /* ConsolidatedWeatherDTO.swift */,
 			);
 			path = DTO;
 			sourceTree = "<group>";
@@ -483,8 +501,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7348A42A27DFA50C0091D559 /* WeatherRepository.swift in Sources */,
+				7348A42E27DFB2950091D559 /* CityEntity.swift in Sources */,
 				7348A3F427DF9DC90091D559 /* ViewController.swift in Sources */,
+				7348A43A27DFD77C0091D559 /* CityDetails.swift in Sources */,
+				7348A43627DFCBA50091D559 /* CityDTO.swift in Sources */,
+				7348A43C27DFDA8C0091D559 /* CityDetailsDTO.swift in Sources */,
+				7348A44027DFDD540091D559 /* ConsolidatedWeatherDTO.swift in Sources */,
 				7348A3F027DF9DC90091D559 /* AppDelegate.swift in Sources */,
+				7348A42C27DFB2490091D559 /* CitiesEntity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

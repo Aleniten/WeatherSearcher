@@ -14,7 +14,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        weatherRepository?.create()
+//        weatherRepository?.getCities(success: { cities in
+//            print(cities.cities?.count)
+//        }, error: {
+//            print("Error")
+//        })
+        weatherRepository?.getCityDetails(woeid: 44418, success: { data in
+            print(data)
+        }, error: {
+            print("Error with CityDetail")
+        })
     }
 
 

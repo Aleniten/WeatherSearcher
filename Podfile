@@ -6,7 +6,7 @@ target 'WeatherSearcher' do
   use_frameworks!
 
   # Pods for WeatherSearcher
-	pod 'Alamofire', '~> 5.5'
+	pod 'Alamofire', '~> 4.7'
 	pod 'Resolver'
 	pod 'AlamofireObjectMapper', '~> 5.2'
 

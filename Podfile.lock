@@ -1,20 +1,29 @@
 PODS:
-  - Alamofire (5.5.0)
+  - Alamofire (4.9.1)
+  - AlamofireObjectMapper (5.2.1):
+    - Alamofire (~> 4.7)
+    - ObjectMapper (~> 3.4)
+  - ObjectMapper (3.5.3)
   - Resolver (1.5.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 5.5)
+  - Alamofire (~> 4.7)
+  - AlamofireObjectMapper (~> 5.2)
   - Resolver
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - AlamofireObjectMapper
+    - ObjectMapper
     - Resolver
 
 SPEC CHECKSUMS:
-  Alamofire: 1c4fb5369c3fe93d2857c780d8bbe09f06f97e7c
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  AlamofireObjectMapper: 1989f690e982b71921b9253f53a4f33a9bc00d88
+  ObjectMapper: 97111c97e054a6ee25917662106689f0b4127b37
   Resolver: 68984624572763018fd8ec7b8e3e8df0e3b6bba5
 
-PODFILE CHECKSUM: da7dd206c354ce08767224ce2f9130a31eda654a
+PODFILE CHECKSUM: 92a97e89069404c402f8364516da785e241e5c78
 
 COCOAPODS: 1.11.2
