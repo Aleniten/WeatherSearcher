@@ -14,7 +14,7 @@ class CityDetailsDTO: Mappable {
     var locationType: String?
     var parent: CityDTO?
     var sunRise: String?
-    var SunSet: String?
+    var sunSet: String?
     var time: String?
     var timezone: String?
     var timeZoneName: String?
@@ -29,7 +29,7 @@ class CityDetailsDTO: Mappable {
          locationType <- map["location_type"]
          parent <- map["parent"]
          sunRise <- map["sun_rise"]
-         SunSet <- map["sun_set"]
+         sunSet <- map["sun_set"]
          time <- map["time"]
          timezone <- map["timezone"]
          timeZoneName <- map["timezone_name"]
@@ -37,13 +37,13 @@ class CityDetailsDTO: Mappable {
          woeid <- map["woeid"]
        }
     
-    func toDomain() -> CityDetails {
+    func toDomain() -> CityDetailsEntity {
         return .init(consolidatedWeather: self.consolidateWeatherForDomain(),
                      lattLong: self.lattLong,
                      locationType: self.locationType,
                      parent: self.parent?.toDomain(),
                      sunRise: self.sunRise,
-                     SunSet: self.SunSet,
+                     sunSet: self.sunSet,
                      time: self.time,
                      timezone: self.timezone,
                      timeZoneName: self.timeZoneName,

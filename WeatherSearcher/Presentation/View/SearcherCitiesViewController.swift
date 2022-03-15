@@ -39,25 +39,15 @@ class SearcherCitiesViewController: UIViewController {
         setup()
         style()
         layout()
-        viewModel.city.observeNext(with: {[weak self] cities in
-            guard let cities = cities else {
-                return }
-            self?.citiesArray = cities
-            self?.tableView.reloadData()
-        })
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
 
-        // Do any additional setup after loading the view.
-//        weatherRepository?.getCities(success: { cities in
-//            print(cities.cities?.count)
-//        }, error: {
-//            print("Error")
-//        })
-//        weatherRepository?.getCityDetails(woeid: 44418, success: { data in
-//            print(data)
-//        }, error: {
-//            print("Error with CityDetail")
-//        })
+        // needed to clear the text in the back navigation:
+        self.navigationItem.title = " "
+        self.navigationController?.navigationBar.tintColor = Constants.Colors.whiteGray
     }
 
 
@@ -68,15 +58,15 @@ extension SearcherCitiesViewController {
     func setup() {
         tableView.dataSource = self
         tableView.delegate = self
-//        searchTab.newText.observeNext {[weak self] text in
-//            print(text)
-//            self?.viewModel.searchCity(city: text ?? "")
-//        }.dispose(in: bag)
+        viewModel.cities.observeNext(with: {[weak self] cities in
+            guard let cities = cities else { return }
+            self?.citiesArray = cities
+            self?.tableView.reloadData()
+        }).dispose(in: bag)
         NotificationCenter.default.addObserver(self, selector: #selector(self.incomingNotification(_:)), name: NSNotification.Name(rawValue: "searchedText"), object: nil)
     }
     
     func style() {
-        
         self.title = "Weather App"
         
         rootStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +79,6 @@ extension SearcherCitiesViewController {
     }
     func layout() {
         rootStackView.addArrangedSubview(searchTab)
-//        rootStackView.addSubview(tableView)
         view.addSubview(rootStackView)
         view.addSubview(tableView)
         
@@ -125,12 +114,19 @@ extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CitiesCell.identifier) as? CitiesCell else { return UITableViewCell() }
-        cell.configureCell(cityName: citiesArray.cities?[indexPath.row].title, cityLocation: citiesArray.cities?[indexPath.row].locationType, favoriteState: citiesArray.cities?[indexPath.row].favorite)
+        cell.configureCell(cityName: citiesArray.cities?[indexPath.row].title, favoriteState: citiesArray.cities?[indexPath.row].favorite)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TO DO
+        
+        guard let cityWOEID = citiesArray.cities?[indexPath.row].woeid else { return }
+        let vc = CityDetailsViewController()
+        vc.modalPresentationStyle = .overFullScreen
+        vc.woeidToFill = cityWOEID
+
+        self.navigationController?.pushViewController(vc, animated: true)
+
     }
     
     

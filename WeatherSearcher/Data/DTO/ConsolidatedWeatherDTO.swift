@@ -9,21 +9,21 @@ import Foundation
 import ObjectMapper
 
 class ConsolidatedWeatherDTO: Mappable {
-    var airPressure: Int?
+    var airPressure: Double?
     var applicableDate: String?
     var created: String?
     var humidity: Int?
     var id: Int?
-    var maxTemp: String?
-    var minTemp: String?
+    var maxTemp: Double?
+    var minTemp: Double?
     var predictability: Int?
-    var theTemp: String?
-    var visibility: String?
+    var theTemp: Double?
+    var visibility: Double?
     var weatherStateAbbr: String?
     var weatherStateName: String?
-    var windDirection: String?
+    var windDirection: Double?
     var windDirectionCompass: String?
-    var windSpeed: String?
+    var windSpeed: Double?
     
     required init?(map: Map) {}
 

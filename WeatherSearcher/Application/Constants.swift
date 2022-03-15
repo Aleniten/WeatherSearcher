@@ -21,15 +21,18 @@ struct Constants {
     }
     
     struct Fonts {
-        static let TabbarFont = UIFont(name: "Avenir", size: 21)
+        static let TabbarFont = UIFont(name: "Avenir", size: 20)
         static let searchFont = UIFont(name: "Avenir", size: 16)
-        static let title = UIFont(name: "Avenir", size: 18)
-        static let subtitle = UIFont(name: "Avenir", size: 16)
+        static let title = UIFont(name: "Avenir", size: 24)
+        static let subtitle = UIFont(name: "Avenir", size: 20)
+        static let tempFont = UIFont(name: "Avenir", size: 48)
+        
     }
     
     struct LocalSpacing {
+        static let buttonSizeTiny = CGFloat(32)
         static let buttonSizeSmall = CGFloat(44)
-        static let buttonSizelarge = CGFloat(120)
+        static let buttonSizelarge = CGFloat(80)
     }
 }
 

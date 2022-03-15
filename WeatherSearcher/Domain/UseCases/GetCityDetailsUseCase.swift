@@ -9,7 +9,7 @@ import Foundation
 import Resolver
 
 protocol GetCityDetailsUseCaseProtocol {
-    func getCityDetails(woeid: Int, success: @escaping (CityDetails) -> Void, error: @escaping () -> Void)
+    func getCityDetails(woeid: Int, success: @escaping (CityDetailsEntity) -> Void, error: @escaping () -> Void)
 }
 
 struct DefaultGetCityDetailsUseCase: GetCityDetailsUseCaseProtocol {
@@ -19,7 +19,7 @@ struct DefaultGetCityDetailsUseCase: GetCityDetailsUseCaseProtocol {
     @Injected
     private var citiesRepository: CitiesRepositoryProtocols
 
-    func getCityDetails(woeid: Int, success: @escaping (CityDetails) -> Void, error: @escaping () -> Void) {
+    func getCityDetails(woeid: Int, success: @escaping (CityDetailsEntity) -> Void, error: @escaping () -> Void) {
         citiesRepository.getCityDetails(woeid: woeid, success: { cityDetail in
             success(cityDetail)
         }, error: {

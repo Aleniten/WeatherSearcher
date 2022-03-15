@@ -7,34 +7,38 @@
 
 import Foundation
 
-struct CityDetails {
+struct CityDetailsEntity {
     var consolidatedWeather: [ConsolidatedWeather]?
     var lattLong: String?
     var locationType: String?
     var parent: CityEntity?
     var sunRise: String?
-    var SunSet: String?
+    var sunSet: String?
     var time: String?
     var timezone: String?
     var timeZoneName: String?
     var title: String?
     var woeid: Int?
+    
 }
 
 struct ConsolidatedWeather {
-    var airPressure: Int?
+    var airPressure: Double?
     var applicableDate: String?
     var created: String?
     var humidity: Int?
     var id: Int?
-    var maxTemp: String?
-    var minTemp: String?
+    var maxTemp: Double?
+    var minTemp: Double?
     var predictability: Int?
-    var theTemp: String?
-    var visibility: String?
+    var theTemp: Double?
+    var visibility: Double?
     var weatherStateAbbr: String?
     var weatherStateName: String?
-    var windDirection: String?
+    var windDirection: Double?
     var windDirectionCompass: String?
-    var windSpeed: String?
+    var windSpeed: Double?
+    var conditionName: String {
+        return "cloud.bolt"
+    }
 }

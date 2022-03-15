@@ -26,7 +26,7 @@ struct DefaultWeatherRepository: CitiesRepositoryProtocols {
         }
     }
     
-    func getCityDetails(woeid: Int, success: @escaping (CityDetails) -> Void, error: @escaping () -> Void) {
+    func getCityDetails(woeid: Int, success: @escaping (CityDetailsEntity) -> Void, error: @escaping () -> Void) {
         Alamofire.request("https://www.metaweather.com/api/location/\(woeid)/", method: .get).responseObject { (response: DataResponse<CityDetailsDTO>) in
             guard let cityDetailsToShow = response.value else {
                 error()

@@ -9,5 +9,5 @@ import Foundation
 
 protocol CitiesRepositoryProtocols {
     func getCities(city: String, success: @escaping (CitiesEntity) -> Void, error: @escaping () -> Void)
-    func getCityDetails(woeid: Int, success: @escaping (CityDetails) -> Void, error: @escaping () -> Void)
+    func getCityDetails(woeid: Int, success: @escaping (CityDetailsEntity) -> Void, error: @escaping () -> Void)
 }
