@@ -13,6 +13,7 @@ extension Resolver: ResolverRegistering {
 
         register { DefaultSearchCityUseCase()}.implements(SearchCityUseCaseProtocol.self)
         register { DefaultGetCityDetailsUseCase()}.implements(GetCityDetailsUseCaseProtocol.self)
-        register { } 
+        register { SearcherCitiesViewModel()}.implements(SearcherCitiesViewModelProtocol.self)
+        register { DefaultWeatherRepository()}.implements(CitiesRepositoryProtocols.self)
     }
 }

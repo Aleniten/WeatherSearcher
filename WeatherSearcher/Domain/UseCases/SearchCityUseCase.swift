@@ -9,7 +9,7 @@ import Foundation
 import Resolver
 
 protocol SearchCityUseCaseProtocol {
-    func searchCity(city: String, completion: (CitiesEntity?) -> Void?)
+    func searchCity(city: String, success: @escaping (CitiesEntity) -> Void, error: @escaping () -> Void)
 }
 
 struct DefaultSearchCityUseCase: SearchCityUseCaseProtocol {
@@ -17,9 +17,11 @@ struct DefaultSearchCityUseCase: SearchCityUseCaseProtocol {
     @Injected
     private var citiesRepository: CitiesRepositoryProtocols
     
-    func searchCity(city: String, completion: (CitiesEntity?) -> Void?) {
-        citiesRepository.getCities(city: city, completion: { cities in
-            completion(cities)
+    func searchCity(city: String, success: @escaping (CitiesEntity) -> Void, error: @escaping () -> Void) {
+        citiesRepository.getCities(city: city, success: { cities in
+            success(cities)
+        }, error: {
+            print("Error in Getting Cities")
         })
     }
 }

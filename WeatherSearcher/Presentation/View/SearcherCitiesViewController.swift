@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import Resolver
+import SwiftUI
+import Bond
 
-class ViewController: UIViewController {
-
-    private let weatherRepository: DefaultWeatherRepository? = DefaultWeatherRepository()
+class SearcherCitiesViewController: UIViewController {
+    
+    @Injected
+    private var viewModel: SearcherCitiesViewModelProtocol
+//    private let weatherRepository: DefaultWeatherRepository? = DefaultWeatherRepository()
     let rootStackView = UIStackView()
     
     var searchTab: SearchView = {
@@ -24,6 +29,12 @@ class ViewController: UIViewController {
         setup()
         style()
         layout()
+        viewModel.city.observeNext(with: {[weak self] cities in
+            guard let cities = cities else {
+                return }
+            print(cities)
+        })
+        
 
         // Do any additional setup after loading the view.
 //        weatherRepository?.getCities(success: { cities in
@@ -31,19 +42,23 @@ class ViewController: UIViewController {
 //        }, error: {
 //            print("Error")
 //        })
-        weatherRepository?.getCityDetails(woeid: 44418, success: { data in
-            print(data)
-        }, error: {
-            print("Error with CityDetail")
-        })
+//        weatherRepository?.getCityDetails(woeid: 44418, success: { data in
+//            print(data)
+//        }, error: {
+//            print("Error with CityDetail")
+//        })
     }
 
 
 }
 
-extension ViewController {
+extension SearcherCitiesViewController {
     
     func setup() {
+//        searchTab.newText.observeNext {[weak self] text in
+//            print(text)
+//            self?.viewModel.searchCity(city: text ?? "")
+//        }.dispose(in: bag)
         NotificationCenter.default.addObserver(self, selector: #selector(self.incomingNotification(_:)), name: NSNotification.Name(rawValue: "searchedText"), object: nil)
     }
     
@@ -72,7 +87,7 @@ extension ViewController {
     
     @objc func incomingNotification(_ notification: Notification) {
         if let text = notification.userInfo?["text"] as? String {
-            print(text)
+            viewModel.searchCity(city: text)
         }
     }
 }

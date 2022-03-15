@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Bond
 
 class SearchView: UIView {
     
@@ -14,6 +15,7 @@ class SearchView: UIView {
     let searchStackView = UIStackView()
     let searchTextField = UITextField()
     let searchButton = UIButton()
+    var newText: Observable<String?> = Observable(nil)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,6 +30,8 @@ class SearchView: UIView {
     
     func setup() {
         searchTextField.delegate = self
+//        searchTextField.reactive.text.bind(to: newText)
+//        searchTextField.reactive.
     }
     
     func stylesForLabels() {
