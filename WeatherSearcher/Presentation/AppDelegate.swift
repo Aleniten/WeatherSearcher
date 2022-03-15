@@ -16,9 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.backgroundColor = .orange
+        window?.backgroundColor = Constants.Colors.backgroundGray
         
         let navigationController = UINavigationController(rootViewController: ViewController())
+        navigationController.navigationBar.backgroundColor = Constants.Colors.mainColor
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white, NSAttributedString.Key.font: Constants.Fonts.TabbarFont]
+        navigationController.navigationBar.titleTextAttributes = textAttributes as [NSAttributedString.Key : Any]
         window?.rootViewController = navigationController
         
         return true
