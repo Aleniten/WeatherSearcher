@@ -13,6 +13,7 @@ class CityDTO: Mappable {
     var locationType: String?
     var title: String?
     var woeid: Int?
+    var favorite: Bool?
     
     required init?(map: Map) {}
 
@@ -24,6 +25,6 @@ class CityDTO: Mappable {
        }
     
     func toDomain() -> CityEntity {
-        return .init(lattLong: self.lattLong, locationType: self.locationType, title: self.title, woeid: self.woeid)
+        return .init(lattLong: self.lattLong, locationType: self.locationType, title: self.title, woeid: self.woeid, favorite: self.favorite)
     }
 }

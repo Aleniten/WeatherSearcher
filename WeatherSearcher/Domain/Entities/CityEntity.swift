@@ -12,4 +12,5 @@ struct CityEntity {
     var locationType: String?
     var title: String?
     var woeid: Int?
+    var favorite: Bool?
 }

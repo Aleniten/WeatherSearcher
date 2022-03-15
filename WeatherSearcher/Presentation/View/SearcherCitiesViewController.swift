@@ -14,15 +14,25 @@ class SearcherCitiesViewController: UIViewController {
     
     @Injected
     private var viewModel: SearcherCitiesViewModelProtocol
-//    private let weatherRepository: DefaultWeatherRepository? = DefaultWeatherRepository()
+
     let rootStackView = UIStackView()
+    
+    private let tableView: UITableView = {
+        let table = UITableView()
+        table.backgroundColor = Constants.Colors.backgroundGray
+        table.register(CitiesCell.self, forCellReuseIdentifier: CitiesCell.identifier)
+        return table
+    }()
     
     var searchTab: SearchView = {
         let search = SearchView()
         return search
     }()
     
-    let defaults = UserDefaults.standard
+    var citiesArray = CitiesEntity.init(cities: [])
+    
+//    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,7 +42,8 @@ class SearcherCitiesViewController: UIViewController {
         viewModel.city.observeNext(with: {[weak self] cities in
             guard let cities = cities else {
                 return }
-            print(cities)
+            self?.citiesArray = cities
+            self?.tableView.reloadData()
         })
         
 
@@ -55,6 +66,8 @@ class SearcherCitiesViewController: UIViewController {
 extension SearcherCitiesViewController {
     
     func setup() {
+        tableView.dataSource = self
+        tableView.delegate = self
 //        searchTab.newText.observeNext {[weak self] text in
 //            print(text)
 //            self?.viewModel.searchCity(city: text ?? "")
@@ -70,10 +83,15 @@ extension SearcherCitiesViewController {
         rootStackView.axis = .vertical
         rootStackView.alignment = .trailing
         rootStackView.spacing = 10
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .singleLine
     }
     func layout() {
         rootStackView.addArrangedSubview(searchTab)
+//        rootStackView.addSubview(tableView)
         view.addSubview(rootStackView)
+        view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
             rootStackView.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
@@ -82,6 +100,11 @@ extension SearcherCitiesViewController {
             searchTab.leadingAnchor.constraint(equalTo: rootStackView.leadingAnchor),
             searchTab.trailingAnchor.constraint(equalTo: rootStackView.trailingAnchor),
             searchTab.heightAnchor.constraint(equalToConstant: 56),
+            rootStackView.heightAnchor.constraint(equalToConstant: 64),
+            tableView.topAnchor.constraint(equalToSystemSpacingBelow: rootStackView.bottomAnchor, multiplier: 0),
+            tableView.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 0),
+            view.trailingAnchor.constraint(equalToSystemSpacingAfter: tableView.trailingAnchor, multiplier: 0),
+            view.bottomAnchor.constraint(equalToSystemSpacingBelow: tableView.bottomAnchor, multiplier: 1),
         ])
     }
     
@@ -90,5 +113,26 @@ extension SearcherCitiesViewController {
             viewModel.searchCity(city: text)
         }
     }
+}
+
+extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSource {
+   
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return citiesArray.cities?.count ?? 0
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CitiesCell.identifier) as? CitiesCell else { return UITableViewCell() }
+        cell.configureCell(cityName: citiesArray.cities?[indexPath.row].title, cityLocation: citiesArray.cities?[indexPath.row].locationType, favoriteState: citiesArray.cities?[indexPath.row].favorite)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // TO DO
+    }
+    
+    
 }
 

@@ -43,7 +43,7 @@ class SearchView: UIView {
         searchTextField.font = Constants.Fonts.searchFont
         searchTextField.setContentHuggingPriority(UILayoutPriority(rawValue: 249), for: .horizontal)
         searchTextField.placeholder = "Search"
-        searchTextField.textAlignment = .right
+        searchTextField.textAlignment = .left
         searchTextField.borderStyle = .roundedRect
         searchTextField.backgroundColor = Constants.Colors.whiteGray
         
