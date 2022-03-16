@@ -7,7 +7,7 @@
 
 import Foundation
 import Resolver
-
+// Protocol for search city use case from UserDefaults
 protocol GetFavoritesUseCaseProtocols {
     func getCities(success: @escaping ([CityEntity]) -> Void, error: @escaping () -> Void)
 }

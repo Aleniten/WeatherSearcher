@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-
+// Cell for Cities Searched or favorites in SearcherCitiesViewController
 class CitiesCell: UITableViewCell {
     
     static let identifier = "CitiesCell"

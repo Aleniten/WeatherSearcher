@@ -15,10 +15,12 @@ class CityDetailsViewController: BaseViewController {
     @Injected
     private var viewModel: SearcherCitiesViewModelProtocol
     
-    //Variables for view Manage
+    // MARK: - Variables for view to Manage view
     var woeidToFill: Int?
     var favorite: Bool?
     var weatherDetail = ShowCityDetailsEntity.init()
+    
+    // MARK: - Programmatic views
     
     // First View
     let iconTempStackView = UIStackView()
@@ -49,7 +51,7 @@ class CityDetailsViewController: BaseViewController {
         table.register(DetailsCell.self, forCellReuseIdentifier: DetailsCell.identifier)
         return table
     }()
-    
+    // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -62,11 +64,10 @@ class CityDetailsViewController: BaseViewController {
         self.showSpinner(self.view, self.spinner.isShowing)
     }
 }
-
+// MARK: - Extension of View Controller
 extension CityDetailsViewController {
-    
+    // MARK: -  delegates and Observers
     func setup() {
-        // Setup and some Injected Observers
         tableView.dataSource = self
         tableView.delegate = self
 
@@ -99,7 +100,7 @@ extension CityDetailsViewController {
         
         
     }
-    
+    // MARK: -  Styles and configuration of views
     func style() {
         self.view.backgroundColor = Constants.Colors.backgroundGray
         
@@ -201,7 +202,7 @@ extension CityDetailsViewController {
         backgroundView.image = image
         backgroundView.contentMode = .scaleAspectFill
     }
-    
+    // MARK: - Button Favorite Pressed
     @objc func favoritePressed(_ sender: UIButton) {
         if let favoriteState = favorite {
             if favoriteState {
@@ -225,6 +226,7 @@ extension CityDetailsViewController {
         }
         
     }
+    // MARK: -  Function to save Favorite in UserDefaults
     func saveCitiesFromUserDefaults() {
         let cityToSave = CityEntity.init()
         
@@ -249,6 +251,7 @@ extension CityDetailsViewController {
             }
         }).dispose(in: bag)
     }
+    // MARK: -  Function to delete Favorite in UserDefaults
     func deleteCitiesFromUserDefaults() {
         let cityToDelete = CityEntity.init()
         
@@ -275,6 +278,7 @@ extension CityDetailsViewController {
             }
         }).dispose(in: bag)
     }
+    // MARK: -  Function to configure FirstView with Data
     func configureView(_ favorite: Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?, isDaylight: Bool?) {
         var tempDaylight: Bool = true
         let colorText = UIColor.white
@@ -349,7 +353,8 @@ extension CityDetailsViewController {
         }
         
     }
-   
+    
+    // MARK: -  Layout of Views
     
     func layout() {
         buttonContainer.addSubview(favoriteButton)
@@ -403,9 +408,9 @@ extension CityDetailsViewController {
     }
     
 }
-
+// MARK: - Extension for TableView
 extension CityDetailsViewController: UITableViewDelegate, UITableViewDataSource {
-    
+    // MARK: -  Delegates functions of TableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return weatherDetail.consolidatedWeather?.count ?? 0

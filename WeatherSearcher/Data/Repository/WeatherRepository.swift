@@ -10,7 +10,7 @@ import Alamofire
 import AlamofireObjectMapper
 
 struct DefaultWeatherRepository: CitiesRepositoryProtocols {
-    
+    // Repository for api
     func getCities(city: String, success: @escaping (CitiesEntity) -> Void, error: @escaping () -> Void){
         
         Alamofire.request("https://www.metaweather.com/api/location/search/?query=\(city)", method: .get).responseArray { (response: DataResponse<[CityDTO]>) in

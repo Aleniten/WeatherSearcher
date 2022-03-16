@@ -9,6 +9,7 @@ import Foundation
 import ObjectMapper
 
 class ConsolidatedWeatherDTO: Mappable {
+    // Data Object
     var airPressure: Double?
     var applicableDate: String?
     var created: String?

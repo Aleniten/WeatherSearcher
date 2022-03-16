@@ -8,7 +8,7 @@
 import Foundation
 
 struct UserDefaultsRepository: UserDefaultsRepositoryProtocol {
-    
+    // Repository for UserDefaults
     func saveCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void) {
         if let obj = UserDefaults.standard.retrieve(object: [CityEntity].self, fromKey: "favorites") {
             var temporaryDecodedCities = obj

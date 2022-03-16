@@ -7,7 +7,7 @@
 
 import Foundation
 import Resolver
-
+// Protocol for get city use case from api
 protocol GetCityDetailsUseCaseProtocol {
     func getCityDetails(woeid: Int, success: @escaping (CityDetailsEntity) -> Void, error: @escaping () -> Void)
 }

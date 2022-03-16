@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-
+// BaseViewControoller for inheritance
 class BaseViewController: UIViewController {
    
     var spinner = SpinnerView()
@@ -15,14 +15,14 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         
     }
-    
+    // create the alert for present error or success
     func alertPresent(title: String, _ message: String) {
-        // create the alert
+        
                let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                self.present(alert, animated: true, completion: nil)
     }
-    
+    // func that convert UIview in UIImage use in CityDetailsViewController
     func image(with view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0.0)
         defer { UIGraphicsEndImageContext() }
@@ -33,19 +33,19 @@ class BaseViewController: UIViewController {
         }
         return nil
     }
-    
+    // func to show spinner
     func showSpinner(_ superView: UIView, _ isShowing: Bool){
         if !isShowing {
             self.spinner.display(onView: superView)
         }
     }
-    
+    // func to remove spinner
     func removeSpinner(_ delay: Double) {
         self.delay(delay, closure: {
             self.spinner.remove()
         })
     }
-    
+    // func to delay actions i use to remove the spinner spinner because data was getting to quickly
     func delay (_ delay: Double, closure: @escaping () -> ()) {
         let when = DispatchTime.now() + delay
         DispatchQueue.main.asyncAfter(deadline: when, execute: closure)

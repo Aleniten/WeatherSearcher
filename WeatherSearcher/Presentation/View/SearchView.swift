@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import Bond
-
+// View for search bar
 class SearchView: UIView {
     
     // search

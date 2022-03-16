@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-
+// Cell for Details of city selected in CityDetailsViewController
 class DetailsCell: UITableViewCell {
     
     static let identifier = "DetailsCell"

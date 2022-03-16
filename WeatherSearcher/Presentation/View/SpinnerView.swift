@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-
+// View for spinner
 class SpinnerView: UIView {
         
     var isShowing: Bool = false

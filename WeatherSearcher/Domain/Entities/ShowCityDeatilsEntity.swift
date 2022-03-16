@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+// Struct that use values to show later in CityDetailsViewController
 struct ShowCityDetailsEntity {
     var consolidatedWeather: [ConsolidatedWeather]?
     var lattLong: String?

@@ -9,6 +9,7 @@ import Foundation
 import ObjectMapper
 
 class CityDetailsDTO: Mappable {
+    // Data Object
     var consolidatedWeather: [ConsolidatedWeatherDTO]?
     var lattLong: String?
     var locationType: String?

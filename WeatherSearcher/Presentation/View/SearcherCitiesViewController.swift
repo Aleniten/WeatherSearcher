@@ -11,12 +11,12 @@ import SwiftUI
 import Bond
 
 class SearcherCitiesViewController: BaseViewController {
-    
+    // MARK: -  Injection of ViewModel
     @Injected
     private var viewModel: SearcherCitiesViewModelProtocol
 
     let rootStackView = UIStackView()
-    
+    // MARK: -  Programmatic views
     private let tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = Constants.Colors.backgroundGray
@@ -28,9 +28,9 @@ class SearcherCitiesViewController: BaseViewController {
         let search = SearchView()
         return search
     }()
-    
+    // MARK: -  Variable to populate for tableView
     var citiesArray = CitiesEntity.init(cities: [])
-    
+    // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,28 +42,29 @@ class SearcherCitiesViewController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         getCitiesFromUserDefaults()
+        // Title dissapear because we empty in viewcycle willdisappear
         self.title = "Weather App"
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        // For clear navigation Title
         self.navigationItem.title = " "
         self.navigationController?.navigationBar.tintColor = Constants.Colors.whiteGray
     }
 
 
 }
-
+// MARK: - Extension of ViewController
 extension SearcherCitiesViewController {
-    
+    // MARK: -  Function to get cities from data store
     func getCitiesFromUserDefaults() {
         self.showSpinner(self.view, self.spinner.isShowing)
         viewModel.getCities()
         self.tableView.reloadData()
         self.removeSpinner(0.5)
     }
-    
+    // MARK: -  delegates, Observers and Notifications
     func setup() {
         tableView.dataSource = self
         tableView.delegate = self
@@ -95,7 +96,7 @@ extension SearcherCitiesViewController {
         }).dispose(in: bag)
         NotificationCenter.default.addObserver(self, selector: #selector(self.incomingNotification(_:)), name: NSNotification.Name(rawValue: "searchedText"), object: nil)
     }
-    
+    // MARK: -  Styles and configuration of views
     func style() {
         self.title = "Weather App"
         
@@ -107,6 +108,7 @@ extension SearcherCitiesViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .singleLine
     }
+    // MARK: -  Layout of Views
     func layout() {
         rootStackView.addArrangedSubview(searchTab)
         view.addSubview(rootStackView)
@@ -133,9 +135,9 @@ extension SearcherCitiesViewController {
         }
     }
 }
-
+// MARK: - Extension of TableView
 extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSource {
-    
+    // MARK: -  Delegates functions of TableView
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100

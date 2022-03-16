@@ -7,7 +7,7 @@
 
 import Foundation
 import Resolver
-
+// Protocol for save city use case from UserDefaults
 protocol SaveFavoritesUseCaseProtocols {
     func saveCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void)
 }

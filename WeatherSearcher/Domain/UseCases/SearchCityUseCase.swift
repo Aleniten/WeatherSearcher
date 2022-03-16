@@ -7,7 +7,7 @@
 
 import Foundation
 import Resolver
-
+// Protocol for search city use case from api
 protocol SearchCityUseCaseProtocol {
     func searchCity(city: String, success: @escaping (CitiesEntity) -> Void, error: @escaping () -> Void)
 }

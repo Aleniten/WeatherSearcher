@@ -7,7 +7,7 @@
 
 import Foundation
 import Resolver
-
+// Protocol for search city use case from UserDefaults
 protocol DeleteFavoritesUseCaseProtocols {
     func deleteCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void)
 }

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+// City Entity Details that we get with woeid from api
 struct CityDetailsEntity {
     var consolidatedWeather: [ConsolidatedWeather]?
     var lattLong: String?

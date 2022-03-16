@@ -9,8 +9,9 @@ import Foundation
 import Bond
 import ReactiveKit
 import Resolver
-
+// MARK: - Protocol For ViewModel
 protocol SearcherCitiesViewModelProtocol {
+    
     func searchCity(city: String)
     func getCityDetails(woeid: Int)
     func showCityDetails(cityToShow: CityDetailsEntity,_ isFavorite: Bool)
@@ -27,8 +28,9 @@ protocol SearcherCitiesViewModelProtocol {
     var cityToshow: Observable<ShowCityDetailsEntity?> { get set }
     var error: Observable<String?> { get }
 }
+// MARK: - ViewModel
 class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
-    
+    // MARK: - ViewModel values
     var cities: Observable<CitiesEntity?> = Observable(nil)
     private var citiesWithFavorites: CitiesEntity = CitiesEntity.init()
     var city: Observable<CityDetailsEntity?> = Observable(nil)
@@ -39,6 +41,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     var cityDetailsRequestEncounter: Observable<Bool?> = Observable(nil)
     var error: Observable<String?> = Observable(nil)
     
+    // MARK: - Injections
     
     @Injected
     private var searchCityUseCase: SearchCityUseCaseProtocol
@@ -53,7 +56,9 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     
     init(){}
     
+    // MARK: - ViewModel function to get cities searched and see if have favorites in SearcherCitiesViewController
     func searchCity(city: String) {
+        
         var temporaryCitiesFromBackend = CitiesEntity.init()
         searchCityUseCase.searchCity(city: city) { [weak self] citiesResponse in
             temporaryCitiesFromBackend = citiesResponse
@@ -80,6 +85,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
                 }
             }
         } error: {
+            // In Case we don't found cities
             self.populateTableViewWithFavoritesInSearch()
             self.citySearched.value = true
             if let cities = self.citiesWithFavorites.cities {
@@ -91,7 +97,9 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         }
     }
     
+    // MARK: - ViewModel function to get cities Details it use in both ViewControllers
     func getCityDetails(woeid: Int) {
+        
         getCityDetails.getCityDetails(woeid: woeid) { [weak self] cityDetail in
             self?.populateTableViewWithFavoritesInSearch()
             if let cities = self?.citiesWithFavorites.cities {
@@ -112,8 +120,10 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
             self.cityDetailsRequestEncounter.value = true
         }
     }
+    // MARK: - ViewModel function that prepare city Details to show in CityDetailsViewController
     
     func showCityDetails(cityToShow: CityDetailsEntity,_ isFavorite: Bool) {
+        // Use Dates components to retrieve the data from today and use in first view of CityDetailsViewController
         let date = Date()
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)
@@ -152,6 +162,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         }
     }
     
+    // MARK: - ViewModel function to save city From UserDefaults in CityDetailsViewController
     func saveCities(city: CityEntity) {
         saveCityUseCase.saveCities(city: city) {
             self.savedFavoritesState.value = true
@@ -160,6 +171,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         }
     }
     
+    // MARK: - ViewModel function to delete city From UserDefaults in CityDetailsViewController
     func deleteCities(city: CityEntity) {
         deleteCityUseCase.deleteCities(city: city) {
             self.deletedFavoriteState.value = true
@@ -167,7 +179,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
             self.deletedFavoriteState.value = false
         }
     }
-    
+    // MARK: - ViewModel function to get cities From UserDefaults in CityDetailsViewController
     func getCities() {
         getCitiesUseCase.getCities(success: { cities in
             var citiesDataStore = CitiesEntity()
@@ -178,6 +190,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         })
     }
     
+    // MARK: - ViewModel function to populate favorites cities to use in both ViewControllers
     func populateTableViewWithFavoritesInSearch() {
         getCitiesUseCase.getCities(success: { cities in
             var citiesDataStore = CitiesEntity()
