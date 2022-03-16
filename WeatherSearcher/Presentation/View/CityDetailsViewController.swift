@@ -72,7 +72,8 @@ extension CityDetailsViewController {
             guard let cityDetails = cityToshow else { return }
             self?.weatherDetail = cityDetails
             
-            self?.configureView(false, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0)
+            
+            self?.configureView(cityDetails.favorite, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0)
             if let favoriteObj = cityToshow?.favorite {
                 self?.favorite = favoriteObj
             } else {
@@ -185,10 +186,17 @@ extension CityDetailsViewController {
         
         viewModel.saveCities(city: cityToDelete)
     }
-    func configureView(_ favorite:Bool = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?) {
-        if favorite {
-            let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
-            favoriteButton.setImage(imageIcon, for: .normal)
+    func configureView(_ favorite:Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?) {
+        
+        if let isFavorite = favorite {
+            if isFavorite {
+                let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
+                favoriteButton.setImage(imageIcon, for: .normal)
+            } else {
+                let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
+                favoriteButton.setImage(imageIcon, for: .normal)
+            }
+            
         } else {
             let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
             favoriteButton.setImage(imageIcon, for: .normal)
@@ -220,7 +228,7 @@ extension CityDetailsViewController {
     
     func layout() {
         iconTempStackView.addArrangedSubview(conditionImageView)
-//        iconTempStackView.addArrangedSubview(tempLabel)
+
         dataStackView.addArrangedSubview(tempLabel)
         dataStackView.addArrangedSubview(minMaxTempLabel)
         dataStackView.addArrangedSubview(humityLabel)
@@ -231,8 +239,7 @@ extension CityDetailsViewController {
        
         containerStackView.addArrangedSubview(leftStackView)
         containerStackView.addArrangedSubview(favoriteButton)
-//        self.contentView.addSubview(leftStackView)
-//        self.contentView.addSubview(favoriteButton)
+
         self.contentView.addSubview(containerStackView)
         self.view.addSubview(contentView)
         view.addSubview(tableView)

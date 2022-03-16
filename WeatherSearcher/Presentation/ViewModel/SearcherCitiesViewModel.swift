@@ -13,10 +13,11 @@ import Resolver
 protocol SearcherCitiesViewModelProtocol {
     func searchCity(city: String)
     func getCityDetails(woeid: Int)
-    func showCityDetails(cityToShow: CityDetailsEntity)
+    func showCityDetails(cityToShow: CityDetailsEntity,_ isFavorite: Bool)
     func saveCities(city: CityEntity)
     func deleteCities(city: CityEntity)
     func getCities()
+    func populateTableViewWithFavoritesInSearch()
     var cities: Observable<CitiesEntity?> { get }
     var city: Observable<CityDetailsEntity?> { get }
     var cityToshow: Observable<ShowCityDetailsEntity?> { get set }
@@ -25,6 +26,7 @@ protocol SearcherCitiesViewModelProtocol {
 class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     
     var cities: Observable<CitiesEntity?> = Observable(nil)
+    private var citiesWithFavorites: CitiesEntity = CitiesEntity.init()
     var city: Observable<CityDetailsEntity?> = Observable(nil)
     var cityToshow: Observable<ShowCityDetailsEntity?> = Observable(nil)
     var error: Observable<String?> = Observable(nil)
@@ -44,24 +46,56 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     init(){}
     
     func searchCity(city: String) {
+        var temporaryCitiesFromBackend = CitiesEntity.init()
         searchCityUseCase.searchCity(city: city) { [weak self] citiesResponse in
-            self?.cities.value = citiesResponse
+            temporaryCitiesFromBackend = citiesResponse
+            self?.populateTableViewWithFavoritesInSearch()
+            if let cities = self?.citiesWithFavorites.cities {
+                let woeids = cities.map { $0.woeid }
+                    if let tempCitiesFromBack = temporaryCitiesFromBackend.cities {
+                        for city in tempCitiesFromBack {
+                            if woeids.contains(city.woeid){
+                                city.favorite = true
+                            }
+                        }
+                        temporaryCitiesFromBackend.cities = tempCitiesFromBack
+                        self?.cities.value = temporaryCitiesFromBackend
+                    } else {
+                        self?.cities.value = citiesResponse
+                    }
+            } else {
+                self?.cities.value = citiesResponse
+            }
+            
         } error: {
             print("Manage Error")
         }
-
     }
     
     func getCityDetails(woeid: Int) {
         getCityDetails.getCityDetails(woeid: woeid) { [weak self] cityDetail in
-            self?.city.value = cityDetail
-            self?.showCityDetails(cityToShow: cityDetail)
+            self?.populateTableViewWithFavoritesInSearch()
+            if let cities = self?.citiesWithFavorites.cities {
+                let woeids = cities.map { $0.woeid }
+                if woeids.contains(woeid) {
+                    self?.city.value = cityDetail
+                    self?.showCityDetails(cityToShow: cityDetail, true)
+                } else {
+                    self?.city.value = cityDetail
+                    self?.showCityDetails(cityToShow: cityDetail, false)
+                }
+            } else {
+                self?.city.value = cityDetail
+                self?.showCityDetails(cityToShow: cityDetail, false)
+            }
+            
+
         } error: {
             print("Manage Error")
         }
     }
     
-    func showCityDetails(cityToShow: CityDetailsEntity) {
+    func showCityDetails(cityToShow: CityDetailsEntity,_ isFavorite: Bool) {
         let date = Date()
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: date)
@@ -85,6 +119,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
                 cityDataStore.weatherStateAbbr = day.weatherStateAbbr
                 cityChoosed.consolidatedWeather?.removeAll{$0.applicableDate == currentDate }
             }
+            cityDataStore.favorite = isFavorite
             cityDataStore.locationType = cityChoosed.locationType
             cityDataStore.lattLong = cityChoosed.lattLong
             cityDataStore.consolidatedWeather = cityChoosed.consolidatedWeather
@@ -120,6 +155,16 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
             var citiesDataStore = CitiesEntity()
             citiesDataStore.cities = cities
             self.cities.value = citiesDataStore
+        }, error: {
+            print("Manage Error")
+        })
+    }
+    
+    func populateTableViewWithFavoritesInSearch() {
+        getCitiesUseCase.getCities(success: { cities in
+            var citiesDataStore = CitiesEntity()
+            citiesDataStore.cities = cities
+            self.citiesWithFavorites = citiesDataStore
         }, error: {
             print("Manage Error")
         })

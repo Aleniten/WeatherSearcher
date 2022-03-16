@@ -66,10 +66,17 @@ extension SearcherCitiesViewController {
     func setup() {
         tableView.dataSource = self
         tableView.delegate = self
-        viewModel.cities.observeNext(with: {[weak self] cities in
-            guard let cities = cities else { return }
-            self?.citiesArray = cities
-            self?.tableView.reloadData()
+        viewModel.cities.observeNext(with: {[weak self] citiesBack in
+            guard let cities = citiesBack else {
+                self?.getCitiesFromUserDefaults()
+                return
+            }
+            if !cities.cities!.isEmpty || cities.cities != nil {
+                self?.citiesArray = cities
+                self?.tableView.reloadData()
+            } else {
+                self?.getCitiesFromUserDefaults()
+            }
         }).dispose(in: bag)
         NotificationCenter.default.addObserver(self, selector: #selector(self.incomingNotification(_:)), name: NSNotification.Name(rawValue: "searchedText"), object: nil)
     }
