@@ -12,12 +12,11 @@ class CitiesCell: UITableViewCell {
     
     static let identifier = "CitiesCell"
     
-    let titleNameLabel = UILabel()
-    var cityNameLabel = UILabel()
+    let cityNameLabel = UILabel()
+    var locationNameLabel = UILabel()
 
     var favoriteIcon = UIImageView()
 
-    let containerStackView = UIStackView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -35,36 +34,34 @@ class CitiesCell: UITableViewCell {
         self.backgroundColor = Constants.Colors.backgroundGray
         contentView.backgroundColor = .clear
         
-        containerStackView.translatesAutoresizingMaskIntoConstraints = false
-        titleNameLabel.translatesAutoresizingMaskIntoConstraints = false
         cityNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        locationNameLabel.translatesAutoresizingMaskIntoConstraints = false
         favoriteIcon.translatesAutoresizingMaskIntoConstraints = false
-        
-        containerStackView.axis = .horizontal
-        containerStackView.spacing = 10
-        containerStackView.distribution = .fillProportionally
-        containerStackView.alignment = .center
   
-        titleNameLabel.numberOfLines = 1
-        titleNameLabel.textAlignment = .left
         cityNameLabel.numberOfLines = 1
         cityNameLabel.textAlignment = .left
+        locationNameLabel.numberOfLines = 1
+        locationNameLabel.textAlignment = .left
 
-        titleNameLabel.font = Constants.Fonts.title
-        cityNameLabel.font = Constants.Fonts.subtitle
-     
-        titleNameLabel.adjustsFontSizeToFitWidth = true
-        cityNameLabel.adjustsFontSizeToFitWidth = true
+        cityNameLabel.font = Constants.Fonts.searchFont
+        locationNameLabel.font = Constants.Fonts.searchFont
 
     }
     
-    func configureCell(cityName: String? = nil, favoriteState: Bool? = nil) {
-        self.titleNameLabel.text = "City:"
+    func configureCell(cityName: String? = nil, locationName: String? = nil, favoriteState: Bool? = nil) {
         
         if let cityName = cityName {
-            self.cityNameLabel.text = cityName
+            self.cityNameLabel.text = "City: \(cityName) "
         } else {
-            self.cityNameLabel.text = ""
+            self.cityNameLabel.text = "City: No City Name"
+        }
+        
+        if let locationName = locationName {
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(systemName: "location")?.withTintColor(Constants.Colors.blackColor)
+            let fullString = NSMutableAttributedString(string: "Location Type: \(locationName) ")
+            fullString.append(NSAttributedString(attachment: imageAttachment))
+            self.locationNameLabel.attributedText = fullString
         }
         
         if favoriteState == true {
@@ -79,21 +76,24 @@ class CitiesCell: UITableViewCell {
     
     func layout() {
 
-        contentView.addSubview(containerStackView)
-        containerStackView.addArrangedSubview(titleNameLabel)
-        containerStackView.addArrangedSubview(cityNameLabel)
-        containerStackView.addArrangedSubview(favoriteIcon)
+        contentView.addSubview(cityNameLabel)
+        contentView.addSubview(locationNameLabel)
+        contentView.addSubview(favoriteIcon)
 
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalToSystemSpacingBelow: contentView.topAnchor, multiplier: 1),
-            containerStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 1),
-            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: containerStackView.trailingAnchor, multiplier: 1),
-            contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: containerStackView.bottomAnchor, multiplier: 1),
-
-            favoriteIcon.heightAnchor.constraint(equalToConstant: 32),
-            favoriteIcon.widthAnchor.constraint(equalToConstant: 32),
-            titleNameLabel.heightAnchor.constraint(equalToConstant: 32),
-            cityNameLabel.heightAnchor.constraint(equalToConstant: 32),
+            cityNameLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
+            cityNameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 1),
+            cityNameLabel.heightAnchor.constraint(equalToConstant: 40),
+            cityNameLabel.widthAnchor.constraint(equalToConstant: 300),
+            locationNameLabel.topAnchor.constraint(equalToSystemSpacingBelow: cityNameLabel.bottomAnchor, multiplier: 1),
+            locationNameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 1),
+            locationNameLabel.heightAnchor.constraint(equalToConstant: 40),
+            locationNameLabel.widthAnchor.constraint(equalToConstant: 300),
+            favoriteIcon.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
+            favoriteIcon.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
+            favoriteIcon.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 4),
+            self.trailingAnchor.constraint(equalToSystemSpacingAfter: favoriteIcon.trailingAnchor, multiplier: 1),
+            self.bottomAnchor.constraint(equalToSystemSpacingBelow: favoriteIcon.bottomAnchor, multiplier: 4),
 
         ])
     }

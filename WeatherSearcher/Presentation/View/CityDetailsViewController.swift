@@ -45,7 +45,7 @@ class CityDetailsViewController: BaseViewController {
     
     private let tableView: UITableView = {
         let table = UITableView()
-        table.backgroundColor = Constants.Colors.backgroundGray
+        table.backgroundColor = Constants.Colors.mainColor
         table.register(DetailsCell.self, forCellReuseIdentifier: DetailsCell.identifier)
         return table
     }()
@@ -206,7 +206,7 @@ extension CityDetailsViewController {
         if let favoriteState = favorite {
             if favoriteState {
                 self.deleteCitiesFromUserDefaults()
-                let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
+                let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.wetAsphalt, renderingMode: .alwaysOriginal)
                 
                 favoriteButton.setImage(imageIcon, for: .normal)
                 self.favorite = false
@@ -375,14 +375,14 @@ extension CityDetailsViewController {
         self.view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
-            conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
+            conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
             favoriteButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             favoriteButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor),
             favoriteButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor),
             favoriteButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
-            buttonContainer.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
-            buttonContainer.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            buttonContainer.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
+            buttonContainer.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
             backgroundView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
@@ -411,10 +411,13 @@ extension CityDetailsViewController: UITableViewDelegate, UITableViewDataSource 
         return weatherDetail.consolidatedWeather?.count ?? 0
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailsCell.identifier) as? DetailsCell else { return UITableViewCell() }
-        cell.configureCell(date: weatherDetail.consolidatedWeather?[indexPath.row].dateToShow, minTemp: weatherDetail.consolidatedWeather?[indexPath.row].minTemp, maxTemp: weatherDetail.consolidatedWeather?[indexPath.row].maxTemp, icon: weatherDetail.consolidatedWeather?[indexPath.row].conditionName)
+        cell.configureCell(date: weatherDetail.consolidatedWeather?[indexPath.row].dateToShow, minTemp: weatherDetail.consolidatedWeather?[indexPath.row].minTemp, maxTemp: weatherDetail.consolidatedWeather?[indexPath.row].maxTemp, icon: weatherDetail.consolidatedWeather?[indexPath.row].conditionName, windSpeed: weatherDetail.consolidatedWeather?[indexPath.row].windSpeed)
         
         return cell
     }

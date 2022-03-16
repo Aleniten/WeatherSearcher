@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct Constants {
-    
+    // Constants in app for easy access
     struct Colors {
         
         static let backgroundGray = UIColor(red: 0.81, green: 0.84, blue: 0.88, alpha: 1.00)
@@ -19,6 +19,7 @@ struct Constants {
         static let blackColor = UIColor(red: 0.13, green: 0.18, blue: 0.24, alpha: 1.00)
         static let favoriteYellow = UIColor(red: 0.96, green: 0.90, blue: 0.55, alpha: 1.00)
         static let blueForWeather = UIColor(red: 0.15, green: 0.24, blue: 0.46, alpha: 1.00)
+        static let wetAsphalt = UIColor(red: 0.20, green: 0.29, blue: 0.37, alpha: 1.00)
     }
     
     struct Fonts {
@@ -27,14 +28,16 @@ struct Constants {
         static let title = UIFont(name: "Avenir", size: 24)
         static let subtitle = UIFont(name: "Avenir", size: 20)
         static let weatherState = UIFont(name: "Avenir Heavy", size: 28)
-        static let tempFont = UIFont(name: "Avenir", size: 48)
+        static let tempFont = UIFont(name: "Avenir Heavy", size: 18)
+        static let cellFont = UIFont(name: "Avenir Heavy", size: 24)
         
     }
     
     struct LocalSpacing {
         static let buttonSizeTiny = CGFloat(32)
         static let buttonSizeSmall = CGFloat(44)
-        static let buttonSizelarge = CGFloat(80)
+        static let buttonSizeMedium = CGFloat(56)
+        static let buttonSizeLarge = CGFloat(80)
     }
 }
 

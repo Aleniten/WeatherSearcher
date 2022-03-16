@@ -10,7 +10,7 @@ import Resolver
 
 extension Resolver: ResolverRegistering {
     public static func registerAllServices() {
-
+        // Extensions For injections
         register { DefaultSearchCityUseCase()}.implements(SearchCityUseCaseProtocol.self)
         register { DefaultGetCityDetailsUseCase()}.implements(GetCityDetailsUseCaseProtocol.self)
         register { SearcherCitiesViewModel()}.implements(SearcherCitiesViewModelProtocol.self)

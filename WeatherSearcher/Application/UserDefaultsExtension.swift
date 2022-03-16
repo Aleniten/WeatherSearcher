@@ -8,7 +8,7 @@
 import Foundation
 
 extension UserDefaults {
-
+ // Extension for save custom objects in User Defaults
    func save<T:Encodable>(customObject object: T, inKey key: String) {
        let encoder = JSONEncoder()
        if let encoded = try? encoder.encode(object) {

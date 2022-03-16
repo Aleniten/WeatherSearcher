@@ -12,11 +12,10 @@ class DetailsCell: UITableViewCell {
     
     static let identifier = "DetailsCell"
     
-    let dateLabel = UILabel()
+    var dateLabel = UILabel()
     var minMaxLabel = UILabel()
     var weatherIcon = UIImageView()
-
-    let containerStackView = UIStackView()
+    var windSpeedLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,34 +30,35 @@ class DetailsCell: UITableViewCell {
     
     
     func styles() {
-        self.backgroundColor = Constants.Colors.backgroundGray
+        self.backgroundColor = Constants.Colors.mainColor
         contentView.backgroundColor = .clear
         
-        containerStackView.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         minMaxLabel.translatesAutoresizingMaskIntoConstraints = false
         weatherIcon.translatesAutoresizingMaskIntoConstraints = false
+        windSpeedLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        containerStackView.axis = .horizontal
-        containerStackView.spacing = 10
-        containerStackView.distribution = .fillProportionally
   
         dateLabel.numberOfLines = 1
-        dateLabel.textAlignment = .left
+        dateLabel.textAlignment = .center
+        
         minMaxLabel.numberOfLines = 1
-        minMaxLabel.textAlignment = .left
+        minMaxLabel.textAlignment = .center
+        
+        windSpeedLabel.numberOfLines = 1
+        windSpeedLabel.textAlignment = .center
 
-        dateLabel.font = Constants.Fonts.title
-        minMaxLabel.font = Constants.Fonts.subtitle
-        dateLabel.textColor = Constants.Colors.blackColor
-        minMaxLabel.textColor = Constants.Colors.blackColor
-     
-        dateLabel.adjustsFontSizeToFitWidth = true
-        minMaxLabel.adjustsFontSizeToFitWidth = true
+        dateLabel.font = Constants.Fonts.tempFont
+        minMaxLabel.font = Constants.Fonts.cellFont
+        windSpeedLabel.font = Constants.Fonts.cellFont
+        
+        dateLabel.textColor = Constants.Colors.whiteGray
+        minMaxLabel.textColor = Constants.Colors.whiteGray
+        windSpeedLabel.textColor = Constants.Colors.whiteGray
 
     }
     
-    func configureCell(date: String? = nil, minTemp: Double?, maxTemp: Double?, icon: String?) {
+    func configureCell(date: String? = nil, minTemp: Double?, maxTemp: Double?, icon: String?, windSpeed: Double?) {
         if let dateText = date {
             self.dateLabel.text = dateText
         }
@@ -74,6 +74,15 @@ class DetailsCell: UITableViewCell {
             self.weatherIcon.image = UIImage(named: imageIcon)
         }
         
+        if let windSpeedDouble = windSpeed {
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(systemName: "wind")?.withTintColor(Constants.Colors.whiteGray)
+            let windSpeedText = String(format: "%.2f", windSpeedDouble)
+            let fullString = NSMutableAttributedString(string: "Wind Speed: \(windSpeedText) ")
+            fullString.append(NSAttributedString(attachment: imageAttachment))
+            windSpeedLabel.attributedText = fullString
+        }
+        
     }
     
     func layout() {
@@ -81,21 +90,31 @@ class DetailsCell: UITableViewCell {
 
         
 
-        contentView.addSubview(containerStackView)
-        containerStackView.addArrangedSubview(dateLabel)
-        containerStackView.addArrangedSubview(minMaxLabel)
-        containerStackView.addArrangedSubview(weatherIcon)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(minMaxLabel)
+        contentView.addSubview(weatherIcon)
+        contentView.addSubview(windSpeedLabel)
+        
 
         NSLayoutConstraint.activate([
-            containerStackView.topAnchor.constraint(equalToSystemSpacingBelow: contentView.topAnchor, multiplier: 1),
-            containerStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.leadingAnchor, multiplier: 1),
-            contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: containerStackView.trailingAnchor, multiplier: 1),
-            contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: containerStackView.bottomAnchor, multiplier: 1),
 
-            weatherIcon.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeTiny),
-            weatherIcon.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeTiny),
-            dateLabel.heightAnchor.constraint(equalToConstant: 32),
-            minMaxLabel.heightAnchor.constraint(equalToConstant: 32),
+        dateLabel.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
+        dateLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 1),
+        dateLabel.heightAnchor.constraint(equalToConstant: 40),
+        dateLabel.widthAnchor.constraint(equalToConstant: 300),
+        minMaxLabel.topAnchor.constraint(equalToSystemSpacingBelow: dateLabel.bottomAnchor, multiplier: 1),
+        minMaxLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 1),
+        minMaxLabel.heightAnchor.constraint(equalToConstant: 20),
+        minMaxLabel.widthAnchor.constraint(equalToConstant: 300),
+        windSpeedLabel.topAnchor.constraint(equalToSystemSpacingBelow: minMaxLabel.bottomAnchor, multiplier: 1),
+        windSpeedLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: self.leadingAnchor, multiplier: 1),
+        windSpeedLabel.heightAnchor.constraint(equalToConstant: 20),
+        windSpeedLabel.widthAnchor.constraint(equalToConstant: 300),
+        self.bottomAnchor.constraint(equalToSystemSpacingBelow: windSpeedLabel.bottomAnchor, multiplier: 1),
+        weatherIcon.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
+        weatherIcon.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
+        weatherIcon.topAnchor.constraint(equalToSystemSpacingBelow: self.topAnchor, multiplier: 1),
+        self.trailingAnchor.constraint(equalToSystemSpacingAfter: weatherIcon.trailingAnchor, multiplier: 1),
 
         ])
     }

@@ -135,6 +135,11 @@ extension SearcherCitiesViewController {
 }
 
 extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -144,7 +149,7 @@ extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CitiesCell.identifier) as? CitiesCell else { return UITableViewCell() }
-        cell.configureCell(cityName: citiesArray.cities?[indexPath.row].title, favoriteState: citiesArray.cities?[indexPath.row].favorite)
+        cell.configureCell(cityName: citiesArray.cities?[indexPath.row].title, locationName: citiesArray.cities?[indexPath.row].locationType, favoriteState: citiesArray.cities?[indexPath.row].favorite)
         return cell
     }
     
