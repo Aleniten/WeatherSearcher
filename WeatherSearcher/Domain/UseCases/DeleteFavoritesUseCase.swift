@@ -19,9 +19,9 @@ struct DefaultDeleteFavoritesUseCase: DeleteFavoritesUseCaseProtocols {
     
     func deleteCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void) {
         userDefaultsRepository.deleteCities(city: city) {
-                print("Succesfully Deleted City")
+               success()
             } error: {
-                print("Error in Deleted City")
+                error()
             }
     }
    

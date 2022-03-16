@@ -21,7 +21,7 @@ struct DefaultSearchCityUseCase: SearchCityUseCaseProtocol {
         citiesRepository.getCities(city: city, success: { cities in
             success(cities)
         }, error: {
-            print("Error in Getting Cities")
+            error()
         })
     }
 }

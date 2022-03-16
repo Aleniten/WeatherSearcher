@@ -18,6 +18,18 @@ struct UserDefaultsRepository: UserDefaultsRepositoryProtocol {
             UserDefaults.standard.save(customObject: [city], inKey: "favorites")
         }
         
+        if let validationObj = UserDefaults.standard.retrieve(object: [CityEntity].self, fromKey: "favorites") {
+            let woeids = validationObj.map { $0.woeid }
+            if woeids.contains(city.woeid){
+                success()
+            } else {
+                error()
+            }
+           
+        } else {
+            error()
+        }
+        
     }
     
     func getCities(success: @escaping ([CityEntity]) -> Void, error: @escaping () -> Void) {
@@ -31,6 +43,14 @@ struct UserDefaultsRepository: UserDefaultsRepositoryProtocol {
             var temporaryDecodedCities = obj
             temporaryDecodedCities = temporaryDecodedCities.filter(){$0.woeid != city.woeid}
             UserDefaults.standard.save(customObject: temporaryDecodedCities, inKey: "favorites")
+        }
+        if let validationObj = UserDefaults.standard.retrieve(object: [CityEntity].self, fromKey: "favorites") {
+            let woeids = validationObj.map { $0.woeid }
+            if woeids.contains(city.woeid){
+                error()
+            } else {
+                success()
+            }
         }
     }
 }

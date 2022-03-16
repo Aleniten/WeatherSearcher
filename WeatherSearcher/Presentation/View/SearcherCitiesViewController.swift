@@ -10,7 +10,7 @@ import Resolver
 import SwiftUI
 import Bond
 
-class SearcherCitiesViewController: UIViewController {
+class SearcherCitiesViewController: BaseViewController {
     
     @Injected
     private var viewModel: SearcherCitiesViewModelProtocol
@@ -48,7 +48,6 @@ class SearcherCitiesViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        // needed to clear the text in the back navigation:
         self.navigationItem.title = " "
         self.navigationController?.navigationBar.tintColor = Constants.Colors.whiteGray
     }
@@ -59,22 +58,38 @@ class SearcherCitiesViewController: UIViewController {
 extension SearcherCitiesViewController {
     
     func getCitiesFromUserDefaults() {
+        self.showSpinner(self.view, self.spinner.isShowing)
         viewModel.getCities()
         self.tableView.reloadData()
+        self.removeSpinner(0.5)
     }
     
     func setup() {
         tableView.dataSource = self
         tableView.delegate = self
         viewModel.cities.observeNext(with: {[weak self] citiesBack in
+            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
+                self?.showSpinner(superView, spinnerShowing)
+            }
             guard let cities = citiesBack else {
                 self?.getCitiesFromUserDefaults()
+                self?.viewModel.citySearched.observeNext(with: {[weak self] searched in
+                    if let citySearched = searched {
+                        self?.alertPresent(title: "Empty", "We couldn't find your city")
+                    }
+                })
                 return
             }
             if !cities.cities!.isEmpty || cities.cities != nil {
                 self?.citiesArray = cities
                 self?.tableView.reloadData()
+                self?.removeSpinner(0.5)
             } else {
+                self?.viewModel.citySearched.observeNext(with: {[weak self] searched in
+                    if let citySearched = searched {
+                        self?.alertPresent(title: "Empty", "We couldn't find your city")
+                    }
+                })
                 self?.getCitiesFromUserDefaults()
             }
         }).dispose(in: bag)
@@ -146,4 +161,3 @@ extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSour
     
     
 }
-

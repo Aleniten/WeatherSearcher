@@ -15,7 +15,6 @@ class SearchView: UIView {
     let searchStackView = UIStackView()
     let searchTextField = UITextField()
     let searchButton = UIButton()
-    var newText: Observable<String?> = Observable(nil)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,8 +29,6 @@ class SearchView: UIView {
     
     func setup() {
         searchTextField.delegate = self
-//        searchTextField.reactive.text.bind(to: newText)
-//        searchTextField.reactive.
     }
     
     func stylesForLabels() {
@@ -52,10 +49,6 @@ class SearchView: UIView {
         searchButton.addTarget(self, action: #selector(searchPressed(_:)), for: .primaryActionTriggered)
         searchButton.tintColor = Constants.Colors.mainColor
     }
-    
-//    func configureView() {
-//
-//    }
     
     func layout() {
         searchStackView.addArrangedSubview(searchTextField)
@@ -91,7 +84,7 @@ extension SearchView: UITextFieldDelegate {
             return true
         } else {
             textField.placeholder = "Type something"
-            return false
+            return true
         }
     }
     

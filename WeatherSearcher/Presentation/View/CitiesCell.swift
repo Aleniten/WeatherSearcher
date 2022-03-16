@@ -16,8 +16,6 @@ class CitiesCell: UITableViewCell {
     var cityNameLabel = UILabel()
 
     var favoriteIcon = UIImageView()
-    
-    let titleStackView = UIStackView()
 
     let containerStackView = UIStackView()
     
@@ -38,22 +36,14 @@ class CitiesCell: UITableViewCell {
         contentView.backgroundColor = .clear
         
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
-
-        titleStackView.translatesAutoresizingMaskIntoConstraints = false
-
         titleNameLabel.translatesAutoresizingMaskIntoConstraints = false
-
         cityNameLabel.translatesAutoresizingMaskIntoConstraints = false
-
         favoriteIcon.translatesAutoresizingMaskIntoConstraints = false
         
         containerStackView.axis = .horizontal
         containerStackView.spacing = 10
         containerStackView.distribution = .fillProportionally
-        titleStackView.axis = .horizontal
-        titleStackView.spacing = 0
-        titleStackView.distribution = .fillEqually
-        titleStackView.alignment = .leading
+        containerStackView.alignment = .center
   
         titleNameLabel.numberOfLines = 1
         titleNameLabel.textAlignment = .left
@@ -78,22 +68,20 @@ class CitiesCell: UITableViewCell {
         }
         
         if favoriteState == true {
+            favoriteIcon.isHidden = false
             let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
             favoriteIcon.image = imageIcon
         } else if favoriteState == false || favoriteState == nil {
-            let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
-            favoriteIcon.image = imageIcon
+            
+            favoriteIcon.isHidden = true
         }
     }
     
     func layout() {
-        titleStackView.addArrangedSubview(titleNameLabel)
-        titleStackView.addArrangedSubview(cityNameLabel)
-
-        
 
         contentView.addSubview(containerStackView)
-        containerStackView.addArrangedSubview(titleStackView)
+        containerStackView.addArrangedSubview(titleNameLabel)
+        containerStackView.addArrangedSubview(cityNameLabel)
         containerStackView.addArrangedSubview(favoriteIcon)
 
         NSLayoutConstraint.activate([

@@ -21,7 +21,7 @@ struct DefaultGetFavoritesUseCase: GetFavoritesUseCaseProtocols {
         userDefaultsRepository.getCities(success: { cities in
             success(cities)
         }, error: {
-            print("Error Not Favorites Saved")
+            error()
         })
     }
    

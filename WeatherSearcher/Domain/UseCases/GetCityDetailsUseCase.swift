@@ -23,7 +23,7 @@ struct DefaultGetCityDetailsUseCase: GetCityDetailsUseCaseProtocol {
         citiesRepository.getCityDetails(woeid: woeid, success: { cityDetail in
             success(cityDetail)
         }, error: {
-            print("Error in get City Details")
+            error()
         })
     }
 }

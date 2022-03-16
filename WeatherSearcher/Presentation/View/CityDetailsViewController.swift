@@ -10,7 +10,7 @@ import Resolver
 import SwiftUI
 import Bond
 
-class CityDetailsViewController: UIViewController {
+class CityDetailsViewController: BaseViewController {
     
     @Injected
     private var viewModel: SearcherCitiesViewModelProtocol
@@ -26,14 +26,17 @@ class CityDetailsViewController: UIViewController {
     let leftStackView = UIStackView()
     let containerStackView = UIStackView()
     
+    
     let conditionImageView = UIImageView()
     let tempLabel = UILabel()
+    let weatherStateLabel = UILabel()
     let minMaxTempLabel = UILabel()
     let humityLabel = UILabel()
     let windSpeedLabel = UILabel()
     
     let favoriteButton = UIButton()
     
+    let buttonContainer = UIView()
     let contentView = UIView()
     
     // Tableview
@@ -50,8 +53,11 @@ class CityDetailsViewController: UIViewController {
         setup()
         style()
         layout()
-        
-
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.showSpinner(self.view, self.spinner.isShowing)
     }
 }
 
@@ -63,24 +69,32 @@ extension CityDetailsViewController {
 
         viewModel.getCityDetails(woeid: woeidToFill ?? 0)
         
-        viewModel.city.observeNext(with: {[weak self] cityDetails in
-            guard let cityDetailed = cityDetails else { return }
-            self?.title = cityDetailed.title
-        }).dispose(in: bag)
-        
         viewModel.cityToshow.observeNext(with: {[weak self] cityToshow in
-            guard let cityDetails = cityToshow else { return }
+            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
+                self?.showSpinner(superView, spinnerShowing)
+            }
+            guard let cityDetails = cityToshow else {
+                self?.viewModel.cityDetailsRequestEncounter.observeNext(with: {[weak self] requestDetails in
+                    if let requested = requestDetails {
+                        if requested {
+                            self?.alertPresent(title: "Whoops!", "We Have encounter a problem with your Request.")
+                        }
+                    }
+                })
+                return }
             self?.weatherDetail = cityDetails
-            
-            
-            self?.configureView(cityDetails.favorite, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0)
+            self?.title = cityDetails.title
+            self?.configureView(cityDetails.favorite, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0, cityDetails.weatherStateName)
             if let favoriteObj = cityToshow?.favorite {
                 self?.favorite = favoriteObj
             } else {
                 self?.favorite = false
             }
             self?.tableView.reloadData()
+            self?.removeSpinner(0.5)
         }).dispose(in: bag)
+        
+        
     }
     
     func style() {
@@ -89,6 +103,7 @@ extension CityDetailsViewController {
         contentView.backgroundColor = Constants.Colors.mainColor
         contentView.translatesAutoresizingMaskIntoConstraints = false
         iconTempStackView.translatesAutoresizingMaskIntoConstraints = false
+        weatherStateLabel.translatesAutoresizingMaskIntoConstraints = false
         dataStackView.translatesAutoresizingMaskIntoConstraints = false
         leftStackView.translatesAutoresizingMaskIntoConstraints = false
         conditionImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -98,32 +113,43 @@ extension CityDetailsViewController {
         windSpeedLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
+        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
         
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         favoriteButton.addTarget(self, action: #selector(favoritePressed), for: .touchUpInside)
+        buttonContainer.backgroundColor = .clear
         
         iconTempStackView.axis = .vertical
         iconTempStackView.spacing = 2
-        iconTempStackView.distribution = .fill
+        iconTempStackView.distribution = .fillProportionally
+        iconTempStackView.alignment = .center
         
         dataStackView.axis = .vertical
-        dataStackView.spacing = 1
-        dataStackView.distribution = .fillProportionally
+        dataStackView.spacing = 2
+        dataStackView.distribution = .fillEqually
         dataStackView.alignment = .center
         
-        leftStackView.axis = .vertical
+        leftStackView.axis = .horizontal
         leftStackView.spacing = 2
-        leftStackView.distribution = .fillEqually
+        leftStackView.distribution = .fillProportionally
+        leftStackView.alignment = .center
         
-        containerStackView.axis = .horizontal
+        containerStackView.axis = .vertical
         containerStackView.spacing = 0
         containerStackView.distribution = .fillProportionally
+        containerStackView.alignment = .center
         
         tempLabel.numberOfLines = 1
         tempLabel.textAlignment = .center
         tempLabel.font = Constants.Fonts.tempFont
         tempLabel.adjustsFontSizeToFitWidth = true
         tempLabel.textColor = Constants.Colors.whiteGray
+        
+        weatherStateLabel.numberOfLines = 1
+        weatherStateLabel.textAlignment = .center
+        weatherStateLabel.font = Constants.Fonts.weatherState
+        weatherStateLabel.adjustsFontSizeToFitWidth = true
+        weatherStateLabel.textColor = Constants.Colors.whiteGray
         
         minMaxTempLabel.numberOfLines = 1
         minMaxTempLabel.textAlignment = .center
@@ -150,16 +176,19 @@ extension CityDetailsViewController {
             if favoriteState {
                 self.deleteCitiesFromUserDefaults()
                 let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
+                
                 favoriteButton.setImage(imageIcon, for: .normal)
                 self.favorite = false
             } else {
                 self.saveCitiesFromUserDefaults()
                 let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
+                
                 favoriteButton.setImage(imageIcon, for: .normal)
                 self.favorite = true
             }
         } else {
             let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
+            
             favoriteButton.setImage(imageIcon, for: .normal)
             self.favorite = true
         }
@@ -174,6 +203,20 @@ extension CityDetailsViewController {
         cityToSave.woeid = weatherDetail.woeid
         cityToSave.favorite = true
         viewModel.saveCities(city: cityToSave)
+        viewModel.savedFavoritesState.observeNext(with: {[weak self] saved in
+            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
+                self?.showSpinner(superView, spinnerShowing)
+            }
+            self?.removeSpinner(0.5)
+            if let savedCity = saved {
+                if savedCity {
+                    self?.alertPresent(title: "Success!", "We Have Saved your City in your Favorites!")
+                } else {
+                    self?.alertPresent(title: "Sorry!", "We had a problem saving the City.")
+                }
+               
+            }
+        }).dispose(in: bag)
     }
     func deleteCitiesFromUserDefaults() {
         let cityToDelete = CityEntity.init()
@@ -184,9 +227,24 @@ extension CityDetailsViewController {
         cityToDelete.woeid = weatherDetail.woeid
         cityToDelete.favorite = true
         
-        viewModel.saveCities(city: cityToDelete)
+        viewModel.deleteCities(city: cityToDelete)
+        viewModel.deletedFavoriteState.observeNext(with: {[weak self] deleted in
+            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
+                self?.showSpinner(superView, spinnerShowing)
+            }
+            self?.removeSpinner(0.5)
+            
+            if let deletedCity = deleted {
+                if deletedCity {
+                    self?.alertPresent(title: "Success!", "We Have Delete the City from your Favorites List!")
+                } else {
+                    self?.alertPresent(title: "Soory!", "We had a problem deleting the City.")
+                }
+               
+            }
+        }).dispose(in: bag)
     }
-    func configureView(_ favorite:Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?) {
+    func configureView(_ favorite: Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?) {
         
         if let isFavorite = favorite {
             if isFavorite {
@@ -205,10 +263,17 @@ extension CityDetailsViewController {
             self.conditionImageView.image = UIImage(named: imageIcon)
         }
        
+        if let weatherStateText = weatherState {
+            self.weatherStateLabel.text = weatherStateText
+        }
         
         if let tempDouble = temp {
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(systemName: "thermometer")?.withTintColor(Constants.Colors.blueForWeather)
             let tempText = String(format: "%.1f", tempDouble)
-            tempLabel.text = "Temp: " + tempText
+            let fullString = NSMutableAttributedString(string: "Temperature: \(tempText) ")
+            fullString.append(NSAttributedString(attachment: imageAttachment))
+            tempLabel.attributedText = fullString
         }
         if let minTempDouble = minTemp,let maxTempDouble = maxTemp {
             let minTempText = String(format: "%.2f", minTempDouble)
@@ -216,44 +281,58 @@ extension CityDetailsViewController {
             minMaxTempLabel.text = "Min.: \(minTempText) - Max.: \(maxTempText)"
         }
         if let humityInt = humity {
-            humityLabel.text = "Humity: \(humityInt)"
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(systemName: "drop")?.withTintColor(Constants.Colors.blueForWeather)
+            let fullString = NSMutableAttributedString(string: "Humity: \(humityInt) ")
+            fullString.append(NSAttributedString(attachment: imageAttachment))
+            humityLabel.attributedText = fullString
         }
         if let windSpeedDouble = windSpeed {
+            let imageAttachment = NSTextAttachment()
+            imageAttachment.image = UIImage(systemName: "wind")?.withTintColor(Constants.Colors.blueForWeather)
             let windSpeedText = String(format: "%.2f", windSpeedDouble)
-            windSpeedLabel.text = "Wind Speed: " + windSpeedText
+            let fullString = NSMutableAttributedString(string: "Wind Speed: \(windSpeedText) ")
+            fullString.append(NSAttributedString(attachment: imageAttachment))
+            windSpeedLabel.attributedText = fullString
         }
         
     }
    
     
     func layout() {
-        iconTempStackView.addArrangedSubview(conditionImageView)
-
+        buttonContainer.addSubview(favoriteButton)
+        
+        leftStackView.addArrangedSubview(weatherStateLabel)
+        leftStackView.addArrangedSubview(buttonContainer)
+        
         dataStackView.addArrangedSubview(tempLabel)
         dataStackView.addArrangedSubview(minMaxTempLabel)
         dataStackView.addArrangedSubview(humityLabel)
         dataStackView.addArrangedSubview(windSpeedLabel)
-        
-        leftStackView.addArrangedSubview(iconTempStackView)
-        leftStackView.addArrangedSubview(dataStackView)
        
+        iconTempStackView.addArrangedSubview(conditionImageView)
+        
+        containerStackView.addArrangedSubview(iconTempStackView)
         containerStackView.addArrangedSubview(leftStackView)
-        containerStackView.addArrangedSubview(favoriteButton)
+        containerStackView.addArrangedSubview(dataStackView)
 
         self.contentView.addSubview(containerStackView)
         self.view.addSubview(contentView)
-        view.addSubview(tableView)
+        self.view.addSubview(tableView)
+        
         NSLayoutConstraint.activate([
+            conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            favoriteButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+            favoriteButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor),
+            favoriteButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor),
+            favoriteButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
+            buttonContainer.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            buttonContainer.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
             containerStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             containerStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: containerStackView.trailingAnchor, multiplier: 1),
             self.containerStackView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.contentView.bottomAnchor, multiplier: 0),
-            leftStackView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.favoriteButton.leadingAnchor, multiplier: 1),
-            self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: leftStackView.bottomAnchor, multiplier: 0),
-            conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
-            conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
-            favoriteButton.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
-            favoriteButton.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
             contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 0),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: contentView.trailingAnchor, multiplier: 0),
@@ -277,7 +356,7 @@ extension CityDetailsViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailsCell.identifier) as? DetailsCell else { return UITableViewCell() }
-        cell.configureCell(date: weatherDetail.consolidatedWeather?[indexPath.row].applicableDate, minTemp: weatherDetail.consolidatedWeather?[indexPath.row].minTemp, maxTemp: weatherDetail.consolidatedWeather?[indexPath.row].maxTemp, icon: weatherDetail.consolidatedWeather?[indexPath.row].conditionName)
+        cell.configureCell(date: weatherDetail.consolidatedWeather?[indexPath.row].dateToShow, minTemp: weatherDetail.consolidatedWeather?[indexPath.row].minTemp, maxTemp: weatherDetail.consolidatedWeather?[indexPath.row].maxTemp, icon: weatherDetail.consolidatedWeather?[indexPath.row].conditionName)
         
         return cell
     }

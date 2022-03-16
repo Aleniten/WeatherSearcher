@@ -20,6 +20,10 @@ protocol SearcherCitiesViewModelProtocol {
     func populateTableViewWithFavoritesInSearch()
     var cities: Observable<CitiesEntity?> { get }
     var city: Observable<CityDetailsEntity?> { get }
+    var citySearched: Observable<Bool?> { get }
+    var cityDetailsRequestEncounter: Observable<Bool?> { get }
+    var savedFavoritesState: Observable<Bool?> { get }
+    var deletedFavoriteState: Observable<Bool?> { get }
     var cityToshow: Observable<ShowCityDetailsEntity?> { get set }
     var error: Observable<String?> { get }
 }
@@ -29,6 +33,10 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     private var citiesWithFavorites: CitiesEntity = CitiesEntity.init()
     var city: Observable<CityDetailsEntity?> = Observable(nil)
     var cityToshow: Observable<ShowCityDetailsEntity?> = Observable(nil)
+    var savedFavoritesState: Observable<Bool?> = Observable(nil)
+    var deletedFavoriteState: Observable<Bool?> = Observable(nil)
+    var citySearched: Observable<Bool?> = Observable(nil)
+    var cityDetailsRequestEncounter: Observable<Bool?> = Observable(nil)
     var error: Observable<String?> = Observable(nil)
     
     
@@ -59,16 +67,27 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
                             }
                         }
                         temporaryCitiesFromBackend.cities = tempCitiesFromBack
-                        self?.cities.value = temporaryCitiesFromBackend
-                    } else {
-                        self?.cities.value = citiesResponse
                     }
             } else {
                 self?.cities.value = citiesResponse
             }
-            
+            if let tempCities = temporaryCitiesFromBackend.cities {
+                if tempCities.isEmpty {
+                    self?.cities.value = self?.citiesWithFavorites
+                    self?.citySearched.value = true
+                } else {
+                    self?.cities.value = temporaryCitiesFromBackend
+                }
+            }
         } error: {
-            print("Manage Error")
+            self.populateTableViewWithFavoritesInSearch()
+            self.citySearched.value = true
+            if let cities = self.citiesWithFavorites.cities {
+                if !cities.isEmpty {
+                    self.cities.value = self.citiesWithFavorites
+                }
+            }
+            self.cities.value = nil
         }
     }
     
@@ -88,10 +107,9 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
                 self?.city.value = cityDetail
                 self?.showCityDetails(cityToShow: cityDetail, false)
             }
-            
-
         } error: {
-            print("Manage Error")
+            self.cityToshow.value = nil
+            self.cityDetailsRequestEncounter.value = true
         }
     }
     
@@ -136,17 +154,17 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     
     func saveCities(city: CityEntity) {
         saveCityUseCase.saveCities(city: city) {
-            print("Manage Success")
+            self.savedFavoritesState.value = true
         } error: {
-            print("Manage Error")
+            self.savedFavoritesState.value = false
         }
     }
     
     func deleteCities(city: CityEntity) {
         deleteCityUseCase.deleteCities(city: city) {
-            print("Manage Success")
+            self.deletedFavoriteState.value = true
         } error: {
-            print("Manage Error")
+            self.deletedFavoriteState.value = false
         }
     }
     

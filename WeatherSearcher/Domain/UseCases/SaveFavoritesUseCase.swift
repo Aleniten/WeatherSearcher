@@ -19,9 +19,9 @@ struct DefaultSaveFavoritesUseCase: SaveFavoritesUseCaseProtocols {
     
     func saveCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void) {
         userDefaultsRepository.saveCities(city: city) {
-                print("Succesfully Saved City")
+                success()
             } error: {
-                print("Error in saving City")
+                error()
             }
     }
    

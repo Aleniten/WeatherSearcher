@@ -38,6 +38,16 @@ struct ConsolidatedWeather {
     var windDirection: Double?
     var windDirectionCompass: String?
     var windSpeed: Double?
+    var dateToShow: String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let applicableDate = applicableDate {
+            let date = dateFormatter.date(from: applicableDate) ?? Date()
+            dateFormatter.dateStyle = .full
+            return dateFormatter.string(from: date)
+        }
+        return ""
+    }
     var conditionName: String {
         switch weatherStateAbbr {
         case "sn":

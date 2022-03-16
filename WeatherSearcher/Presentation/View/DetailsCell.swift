@@ -60,7 +60,7 @@ class DetailsCell: UITableViewCell {
     
     func configureCell(date: String? = nil, minTemp: Double?, maxTemp: Double?, icon: String?) {
         if let dateText = date {
-            self.dateLabel.text = "Date: " + dateText
+            self.dateLabel.text = dateText
         }
         
         
