@@ -38,6 +38,7 @@
 		7348A46627E13DB70091D559 /* UserDefaultsRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A46527E13DB70091D559 /* UserDefaultsRepositoryProtocol.swift */; };
 		7348A46827E13F310091D559 /* DeleteFavoritesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A46727E13F310091D559 /* DeleteFavoritesUseCase.swift */; };
 		7348A46A27E13FB60091D559 /* GetFavoritesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A46927E13FB60091D559 /* GetFavoritesUseCase.swift */; };
+		7348A46E27E176D70091D559 /* UserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7348A46D27E176D70091D559 /* UserDefaultsExtension.swift */; };
 		BAC2C525687E99F9F2B6876C /* Pods_WeatherSearcher_WeatherSearcherUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 024330BB7AE35958746E3EFB /* Pods_WeatherSearcher_WeatherSearcherUITests.framework */; };
 		F295224FAC3289F34373A26F /* Pods_WeatherSearcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8F53E1A21051A6E6A70921E /* Pods_WeatherSearcher.framework */; };
 /* End PBXBuildFile section */
@@ -100,6 +101,7 @@
 		7348A46527E13DB70091D559 /* UserDefaultsRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsRepositoryProtocol.swift; sourceTree = "<group>"; };
 		7348A46727E13F310091D559 /* DeleteFavoritesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteFavoritesUseCase.swift; sourceTree = "<group>"; };
 		7348A46927E13FB60091D559 /* GetFavoritesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetFavoritesUseCase.swift; sourceTree = "<group>"; };
+		7348A46D27E176D70091D559 /* UserDefaultsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtension.swift; sourceTree = "<group>"; };
 		C8F53E1A21051A6E6A70921E /* Pods_WeatherSearcher.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherSearcher.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4084FEF5F4940CB3E8EE219 /* Pods-WeatherSearcher-WeatherSearcherUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherSearcher-WeatherSearcherUITests.release.xcconfig"; path = "Target Support Files/Pods-WeatherSearcher-WeatherSearcherUITests/Pods-WeatherSearcher-WeatherSearcherUITests.release.xcconfig"; sourceTree = "<group>"; };
 		F72AC46058F2A76637A113F0 /* Pods_WeatherSearcherTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherSearcherTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -314,6 +316,7 @@
 			children = (
 				7348A44827DFEDA80091D559 /* ResolverExtension.swift */,
 				7348A44C27DFF8E70091D559 /* Constants.swift */,
+				7348A46D27E176D70091D559 /* UserDefaultsExtension.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -568,6 +571,7 @@
 				7348A46A27E13FB60091D559 /* GetFavoritesUseCase.swift in Sources */,
 				7348A46227E13CC60091D559 /* SaveFavoritesUseCase.swift in Sources */,
 				7348A45527E036D90091D559 /* CitiesCell.swift in Sources */,
+				7348A46E27E176D70091D559 /* UserDefaultsExtension.swift in Sources */,
 				7348A43A27DFD77C0091D559 /* CityDetailsEntity.swift in Sources */,
 				7348A45C27E0DE540091D559 /* ShowCityDeatilsEntity.swift in Sources */,
 				7348A44427DFEA8D0091D559 /* SearchCityUseCase.swift in Sources */,

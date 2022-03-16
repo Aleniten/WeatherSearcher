@@ -9,42 +9,28 @@ import Foundation
 
 struct UserDefaultsRepository: UserDefaultsRepositoryProtocol {
     
-    let userDefaults = UserDefaults()
-    
     func saveCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void) {
-     
-//        if let value = UserDefaults.standard.data(forKey: "favorites") {
-//            guard let array = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(value) as? [CityEntity] else {
-//                        fatalError("loadWidgetDataArray - Can't get Array")
-//                    }
-//            var arrayTemporary = NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(value) as? [CityEntity]
-//            arrayTemporary.append(city)
-//            let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: arrayTemporary)
-//            userDefaults.set(encodedData, forKey: "favorites")
-//          //  userDefaults.setValue(arrayTemporary, forKey: "favorites")
-//        } else {
-//            userDefaults.set([city], forKey: "favorites")
-////            userDefaults.setValue([city], forKey: "favorites")
-//        }
+        if let obj = UserDefaults.standard.retrieve(object: [CityEntity].self, fromKey: "favorites") {
+            var temporaryDecodedCities = obj
+            temporaryDecodedCities.append(city)
+            UserDefaults.standard.save(customObject: temporaryDecodedCities, inKey: "favorites")
+        } else {
+            UserDefaults.standard.save(customObject: [city], inKey: "favorites")
+        }
+        
     }
     
     func getCities(success: @escaping ([CityEntity]) -> Void, error: @escaping () -> Void) {
-        
-//        if let value = userDefaults.data(forKey: "favorites") {
-//            var arrayTemporary = NSKeyedUnarchiver.unarchiveObject(with: value) as! [CityEntity]
-//            success(arrayTemporary)
-//        }
-        
+        if let obj = UserDefaults.standard.retrieve(object: [CityEntity].self, fromKey: "favorites") {
+            success(obj)
+        }
     }
     
     func deleteCities(city: CityEntity, success: @escaping () -> Void, error: @escaping () -> Void) {
-//        if let value = userDefaults.data(forKey: "favorites") {
-//            var arrayTemporary = NSKeyedUnarchiver.unarchiveObject(with: value) as! [CityEntity]
-//            arrayTemporary = arrayTemporary.filter(){$0.woeid != city.woeid}
-//            userDefaults.set(arrayTemporary, forKey: "favorites")
-////            userDefaults.setValue(arrayTemporary, forKey: "favorites")
-//        }
+        if let obj = UserDefaults.standard.retrieve(object: [CityEntity].self, fromKey: "favorites") {
+            var temporaryDecodedCities = obj
+            temporaryDecodedCities = temporaryDecodedCities.filter(){$0.woeid != city.woeid}
+            UserDefaults.standard.save(customObject: temporaryDecodedCities, inKey: "favorites")
+        }
     }
-    
-    
 }

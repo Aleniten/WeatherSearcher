@@ -25,6 +25,12 @@ class CityDTO: Mappable {
        }
     
     func toDomain() -> CityEntity {
-        return .init(lattLong: self.lattLong, locationType: self.locationType, title: self.title, woeid: self.woeid, favorite: self.favorite)
+        let cityToDomain = CityEntity.init()
+        cityToDomain.lattLong = self.lattLong
+        cityToDomain.locationType = self.locationType
+        cityToDomain.title = self.title
+        cityToDomain.woeid = self.woeid
+        cityToDomain.favorite = self.favorite
+        return cityToDomain
     }
 }

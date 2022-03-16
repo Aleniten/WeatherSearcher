@@ -165,12 +165,25 @@ extension CityDetailsViewController {
         
     }
     func saveCitiesFromUserDefaults() {
-        let cityToSave = CityEntity.init(lattLong: weatherDetail.lattLong, locationType: weatherDetail.locationType, title: weatherDetail.title, woeid: weatherDetail.woeid, favorite: true)
+        let cityToSave = CityEntity.init()
+        
+        cityToSave.lattLong = weatherDetail.lattLong
+        cityToSave.locationType = weatherDetail.locationType
+        cityToSave.title = weatherDetail.title
+        cityToSave.woeid = weatherDetail.woeid
+        cityToSave.favorite = true
         viewModel.saveCities(city: cityToSave)
     }
     func deleteCitiesFromUserDefaults() {
-        let cityToSave = CityEntity.init(lattLong: weatherDetail.lattLong, locationType: weatherDetail.locationType, title: weatherDetail.title, woeid: weatherDetail.woeid, favorite: false)
-        viewModel.saveCities(city: cityToSave)
+        let cityToDelete = CityEntity.init()
+        
+        cityToDelete.lattLong = weatherDetail.lattLong
+        cityToDelete.locationType = weatherDetail.locationType
+        cityToDelete.title = weatherDetail.title
+        cityToDelete.woeid = weatherDetail.woeid
+        cityToDelete.favorite = true
+        
+        viewModel.saveCities(city: cityToDelete)
     }
     func configureView(_ favorite:Bool = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?) {
         if favorite {

@@ -31,8 +31,6 @@ class SearcherCitiesViewController: UIViewController {
     
     var citiesArray = CitiesEntity.init(cities: [])
     
-//    let defaults = UserDefaults.standard
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,6 +42,7 @@ class SearcherCitiesViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         getCitiesFromUserDefaults()
+        self.title = "Weather App"
     }
     
     override func viewWillDisappear(_ animated: Bool) {

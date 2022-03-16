@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import UIKit
 
-struct CityEntity {
+class CityEntity: Codable {
     var lattLong: String?
     var locationType: String?
     var title: String?
