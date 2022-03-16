@@ -147,30 +147,50 @@ extension CityDetailsViewController {
         tempLabel.textAlignment = .center
         tempLabel.font = Constants.Fonts.tempFont
         tempLabel.adjustsFontSizeToFitWidth = true
+        tempLabel.layer.shadowColor = Constants.Colors.blackColor.cgColor
+        tempLabel.layer.shadowOffset = CGSize(width: 0, height: 3)
+        tempLabel.layer.shadowOpacity = 1.0
+        tempLabel.layer.shadowRadius = 0.0
         
         
         weatherStateLabel.numberOfLines = 1
         weatherStateLabel.textAlignment = .center
         weatherStateLabel.font = Constants.Fonts.weatherState
         weatherStateLabel.adjustsFontSizeToFitWidth = true
+        weatherStateLabel.layer.shadowColor = Constants.Colors.blackColor.cgColor
+        weatherStateLabel.layer.shadowOffset = CGSize(width: 0, height: 3)
+        weatherStateLabel.layer.shadowOpacity = 1.0
+        weatherStateLabel.layer.shadowRadius = 0.0
         
         
         minMaxTempLabel.numberOfLines = 1
         minMaxTempLabel.textAlignment = .center
         minMaxTempLabel.font = Constants.Fonts.subtitle
         minMaxTempLabel.adjustsFontSizeToFitWidth = true
+        minMaxTempLabel.layer.shadowColor = Constants.Colors.blackColor.cgColor
+        minMaxTempLabel.layer.shadowOffset = CGSize(width: 0, height: 3)
+        minMaxTempLabel.layer.shadowOpacity = 1.0
+        minMaxTempLabel.layer.shadowRadius = 0.0
        
         
         humityLabel.numberOfLines = 1
         humityLabel.textAlignment = .center
         humityLabel.font = Constants.Fonts.subtitle
         humityLabel.adjustsFontSizeToFitWidth = true
+        humityLabel.layer.shadowColor = Constants.Colors.blackColor.cgColor
+        humityLabel.layer.shadowOffset = CGSize(width: 0, height: 3)
+        humityLabel.layer.shadowOpacity = 1.0
+        humityLabel.layer.shadowRadius = 0.0
         
         
         windSpeedLabel.numberOfLines = 1
         windSpeedLabel.textAlignment = .center
         windSpeedLabel.font = Constants.Fonts.subtitle
         windSpeedLabel.adjustsFontSizeToFitWidth = true
+        windSpeedLabel.layer.shadowColor = Constants.Colors.blackColor.cgColor
+        windSpeedLabel.layer.shadowOffset = CGSize(width: 0, height: 3)
+        windSpeedLabel.layer.shadowOpacity = 1.0
+        windSpeedLabel.layer.shadowRadius = 0.0
         
         
         backgroundImage.backgroundColor = Constants.Colors.mainColor
@@ -255,22 +275,20 @@ extension CityDetailsViewController {
         }).dispose(in: bag)
     }
     func configureView(_ favorite: Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?, isDaylight: Bool?) {
-        var colorText = UIColor.white
+        var tempDaylight: Bool = true
+        let colorText = UIColor.white
         if let isDaylightUnwrapped = isDaylight {
+            
             if isDaylightUnwrapped {
                 backgroundView.image = UIImage(named: "day-background")
             } else {
                 backgroundView.image = UIImage(named: "night-background")
-                colorText = UIColor.black
+                tempDaylight = false
             }
         } else {
             backgroundView.image = UIImage(named: "day-background")
         }
-        tempLabel.textColor = colorText
-        weatherStateLabel.textColor = colorText
-        minMaxTempLabel.textColor = colorText
-        humityLabel.textColor = colorText
-        windSpeedLabel.textColor = colorText
+        
         
         if let isFavorite = favorite {
             if isFavorite {
@@ -288,36 +306,43 @@ extension CityDetailsViewController {
         if let imageIcon = icon {
             self.conditionImageView.image = UIImage(named: imageIcon)
         }
-       
+        let strokeTextAttributes = [
+            NSAttributedString.Key.strokeColor : tempDaylight ? UIColor.red : Constants.Colors.blueForWeather,
+          NSAttributedString.Key.foregroundColor : colorText,
+              NSAttributedString.Key.strokeWidth : -4.0,
+            NSAttributedString.Key.font : Constants.Fonts.weatherState]
+          as [NSAttributedString.Key : Any]
         if let weatherStateText = weatherState {
-            self.weatherStateLabel.text = weatherStateText
+            let fullString = NSMutableAttributedString(string: weatherStateText, attributes: strokeTextAttributes)
+            self.weatherStateLabel.attributedText = fullString
         }
-        
+
         if let tempDouble = temp {
             let imageAttachment = NSTextAttachment()
-            imageAttachment.image = UIImage(systemName: "thermometer")?.withTintColor(Constants.Colors.blueForWeather)
+            imageAttachment.image = UIImage(systemName: "thermometer")?.withTintColor(tempDaylight ? UIColor.red : Constants.Colors.blueForWeather)
             let tempText = String(format: "%.1f", tempDouble)
-            let fullString = NSMutableAttributedString(string: "Temperature: \(tempText) ")
+            let fullString = NSMutableAttributedString(string: "Temperature: \(tempText) ", attributes: strokeTextAttributes)
             fullString.append(NSAttributedString(attachment: imageAttachment))
             tempLabel.attributedText = fullString
         }
         if let minTempDouble = minTemp,let maxTempDouble = maxTemp {
             let minTempText = String(format: "%.2f", minTempDouble)
             let maxTempText = String(format: "%.2f", maxTempDouble)
-            minMaxTempLabel.text = "Min.: \(minTempText) - Max.: \(maxTempText)"
+            let fullString = NSMutableAttributedString(string: "Min.: \(minTempText) - Max.: \(maxTempText)", attributes: strokeTextAttributes)
+            minMaxTempLabel.attributedText = fullString
         }
         if let humityInt = humity {
             let imageAttachment = NSTextAttachment()
-            imageAttachment.image = UIImage(systemName: "drop")?.withTintColor(Constants.Colors.blueForWeather)
-            let fullString = NSMutableAttributedString(string: "Humity: \(humityInt) ")
+            imageAttachment.image = UIImage(systemName: "drop")?.withTintColor(tempDaylight ? UIColor.red : Constants.Colors.blueForWeather)
+            let fullString = NSMutableAttributedString(string: "Humity: \(humityInt) ", attributes: strokeTextAttributes)
             fullString.append(NSAttributedString(attachment: imageAttachment))
             humityLabel.attributedText = fullString
         }
         if let windSpeedDouble = windSpeed {
             let imageAttachment = NSTextAttachment()
-            imageAttachment.image = UIImage(systemName: "wind")?.withTintColor(Constants.Colors.blueForWeather)
+            imageAttachment.image = UIImage(systemName: "wind")?.withTintColor(tempDaylight ? UIColor.red : Constants.Colors.blueForWeather)
             let windSpeedText = String(format: "%.2f", windSpeedDouble)
-            let fullString = NSMutableAttributedString(string: "Wind Speed: \(windSpeedText) ")
+            let fullString = NSMutableAttributedString(string: "Wind Speed: \(windSpeedText) ", attributes: strokeTextAttributes)
             fullString.append(NSAttributedString(attachment: imageAttachment))
             windSpeedLabel.attributedText = fullString
         }
