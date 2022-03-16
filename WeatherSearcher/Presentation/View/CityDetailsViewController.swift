@@ -33,11 +33,13 @@ class CityDetailsViewController: BaseViewController {
     let minMaxTempLabel = UILabel()
     let humityLabel = UILabel()
     let windSpeedLabel = UILabel()
+    let backgroundView = UIImageView()
     
     let favoriteButton = UIButton()
     
     let buttonContainer = UIView()
     let contentView = UIView()
+    var backgroundImage = UIView()
     
     // Tableview
     
@@ -84,7 +86,7 @@ extension CityDetailsViewController {
                 return }
             self?.weatherDetail = cityDetails
             self?.title = cityDetails.title
-            self?.configureView(cityDetails.favorite, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0, cityDetails.weatherStateName)
+            self?.configureView(cityDetails.favorite, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0, cityDetails.weatherStateName, isDaylight: cityDetails.isDayLight)
             if let favoriteObj = cityToshow?.favorite {
                 self?.favorite = favoriteObj
             } else {
@@ -101,6 +103,7 @@ extension CityDetailsViewController {
         self.view.backgroundColor = Constants.Colors.backgroundGray
         
         contentView.backgroundColor = Constants.Colors.mainColor
+        
         contentView.translatesAutoresizingMaskIntoConstraints = false
         iconTempStackView.translatesAutoresizingMaskIntoConstraints = false
         weatherStateLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +117,7 @@ extension CityDetailsViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
         buttonContainer.translatesAutoresizingMaskIntoConstraints = false
+        backgroundImage.translatesAutoresizingMaskIntoConstraints = false
         
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         favoriteButton.addTarget(self, action: #selector(favoritePressed), for: .touchUpInside)
@@ -143,32 +147,38 @@ extension CityDetailsViewController {
         tempLabel.textAlignment = .center
         tempLabel.font = Constants.Fonts.tempFont
         tempLabel.adjustsFontSizeToFitWidth = true
-        tempLabel.textColor = Constants.Colors.whiteGray
+        
         
         weatherStateLabel.numberOfLines = 1
         weatherStateLabel.textAlignment = .center
         weatherStateLabel.font = Constants.Fonts.weatherState
         weatherStateLabel.adjustsFontSizeToFitWidth = true
-        weatherStateLabel.textColor = Constants.Colors.whiteGray
+        
         
         minMaxTempLabel.numberOfLines = 1
         minMaxTempLabel.textAlignment = .center
         minMaxTempLabel.font = Constants.Fonts.subtitle
         minMaxTempLabel.adjustsFontSizeToFitWidth = true
-        minMaxTempLabel.textColor = Constants.Colors.whiteGray
+       
         
         humityLabel.numberOfLines = 1
         humityLabel.textAlignment = .center
         humityLabel.font = Constants.Fonts.subtitle
         humityLabel.adjustsFontSizeToFitWidth = true
-        humityLabel.textColor = Constants.Colors.whiteGray
+        
         
         windSpeedLabel.numberOfLines = 1
         windSpeedLabel.textAlignment = .center
         windSpeedLabel.font = Constants.Fonts.subtitle
         windSpeedLabel.adjustsFontSizeToFitWidth = true
-        windSpeedLabel.textColor = Constants.Colors.whiteGray
         
+        
+        backgroundImage.backgroundColor = Constants.Colors.mainColor
+        // background
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        let image = self.image(with: backgroundImage)
+        backgroundView.image = image
+        backgroundView.contentMode = .scaleAspectFill
     }
     
     @objc func favoritePressed(_ sender: UIButton) {
@@ -244,7 +254,23 @@ extension CityDetailsViewController {
             }
         }).dispose(in: bag)
     }
-    func configureView(_ favorite: Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?) {
+    func configureView(_ favorite: Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?, isDaylight: Bool?) {
+        var colorText = UIColor.white
+        if let isDaylightUnwrapped = isDaylight {
+            if isDaylightUnwrapped {
+                backgroundView.image = UIImage(named: "day-background")
+            } else {
+                backgroundView.image = UIImage(named: "night-background")
+                colorText = UIColor.black
+            }
+        } else {
+            backgroundView.image = UIImage(named: "day-background")
+        }
+        tempLabel.textColor = colorText
+        weatherStateLabel.textColor = colorText
+        minMaxTempLabel.textColor = colorText
+        humityLabel.textColor = colorText
+        windSpeedLabel.textColor = colorText
         
         if let isFavorite = favorite {
             if isFavorite {
@@ -316,7 +342,9 @@ extension CityDetailsViewController {
         containerStackView.addArrangedSubview(leftStackView)
         containerStackView.addArrangedSubview(dataStackView)
 
+        self.contentView.addSubview(backgroundView)
         self.contentView.addSubview(containerStackView)
+        
         self.view.addSubview(contentView)
         self.view.addSubview(tableView)
         
@@ -329,6 +357,10 @@ extension CityDetailsViewController {
             favoriteButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
             buttonContainer.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
             buttonContainer.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            backgroundView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             containerStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             containerStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
             self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: containerStackView.trailingAnchor, multiplier: 1),

@@ -26,6 +26,24 @@ struct ShowCityDetailsEntity {
     var humidity: Int?
     var windSpeed: Double?
     var favorite: Bool?
+    var isDayLight: Bool? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        if let time = time, let sunSet = sunSet, let sunRise = sunRise {
+            let actualTime = dateFormatter.date(from: time) ?? Date()
+            let sunSetTime = dateFormatter.date(from: sunSet) ?? Date()
+            let sunRiseTime = dateFormatter.date(from: sunRise) ?? Date()
+            print(dateFormatter.string(from: actualTime))
+            print(dateFormatter.string(from: sunSetTime))
+            print(dateFormatter.string(from: sunRiseTime))
+            if actualTime < sunSetTime && (actualTime > sunRiseTime || actualTime == sunRiseTime) {
+                return true
+            } else {
+                return false
+            }
+        }
+        return true
+    }
     
     var conditionName: String {
         switch weatherStateAbbr {

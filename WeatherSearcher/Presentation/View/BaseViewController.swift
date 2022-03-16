@@ -23,6 +23,17 @@ class BaseViewController: UIViewController {
                self.present(alert, animated: true, completion: nil)
     }
     
+    func image(with view: UIView) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0.0)
+        defer { UIGraphicsEndImageContext() }
+        if let context = UIGraphicsGetCurrentContext() {
+            view.layer.render(in: context)
+            let image = UIGraphicsGetImageFromCurrentImageContext()
+            return image
+        }
+        return nil
+    }
+    
     func showSpinner(_ superView: UIView, _ isShowing: Bool){
         if !isShowing {
             self.spinner.display(onView: superView)
