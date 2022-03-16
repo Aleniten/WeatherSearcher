@@ -66,6 +66,7 @@ class CityDetailsViewController: BaseViewController {
 extension CityDetailsViewController {
     
     func setup() {
+        // Setup and some Injected Observers
         tableView.dataSource = self
         tableView.delegate = self
 

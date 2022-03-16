@@ -32,6 +32,8 @@ class SearchView: UIView {
     }
     
     func stylesForLabels() {
+        
+        // Configuration of Views
         self.backgroundColor = Constants.Colors.whiteGray
         searchStackView.translatesAutoresizingMaskIntoConstraints = false
         searchStackView.spacing = 8
