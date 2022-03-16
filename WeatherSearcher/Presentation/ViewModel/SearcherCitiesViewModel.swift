@@ -14,6 +14,9 @@ protocol SearcherCitiesViewModelProtocol {
     func searchCity(city: String)
     func getCityDetails(woeid: Int)
     func showCityDetails(cityToShow: CityDetailsEntity)
+    func saveCities(city: CityEntity)
+    func deleteCities(city: CityEntity)
+    func getCities()
     var cities: Observable<CitiesEntity?> { get }
     var city: Observable<CityDetailsEntity?> { get }
     var cityToshow: Observable<ShowCityDetailsEntity?> { get set }
@@ -31,6 +34,12 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     private var searchCityUseCase: SearchCityUseCaseProtocol
     @Injected
     private var getCityDetails: GetCityDetailsUseCaseProtocol
+    @Injected
+    private var saveCityUseCase: SaveFavoritesUseCaseProtocols
+    @Injected
+    private var deleteCityUseCase: DeleteFavoritesUseCaseProtocols
+    @Injected
+    private var getCitiesUseCase: GetFavoritesUseCaseProtocols
     
     init(){}
     
@@ -38,7 +47,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         searchCityUseCase.searchCity(city: city) { [weak self] citiesResponse in
             self?.cities.value = citiesResponse
         } error: {
-            print("Manejo el error")
+            print("Manage Error")
         }
 
     }
@@ -48,7 +57,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
             self?.city.value = cityDetail
             self?.showCityDetails(cityToShow: cityDetail)
         } error: {
-            print("Manejo el error")
+            print("Manage Error")
         }
     }
     
@@ -73,8 +82,11 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
                 cityDataStore.weatherStateName = day.weatherStateName
                 cityDataStore.humidity = day.humidity
                 cityDataStore.windSpeed = day.windSpeed
+                cityDataStore.weatherStateAbbr = day.weatherStateAbbr
                 cityChoosed.consolidatedWeather?.removeAll{$0.applicableDate == currentDate }
             }
+            cityDataStore.locationType = cityChoosed.locationType
+            cityDataStore.lattLong = cityChoosed.lattLong
             cityDataStore.consolidatedWeather = cityChoosed.consolidatedWeather
             cityDataStore.woeid = cityChoosed.woeid
             cityDataStore.title = cityChoosed.title
@@ -85,6 +97,32 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
             self.cityToshow.value = cityDataStore
             
         }
+    }
+    
+    func saveCities(city: CityEntity) {
+        saveCityUseCase.saveCities(city: city) {
+            print("Manage Success")
+        } error: {
+            print("Manage Error")
+        }
+    }
+    
+    func deleteCities(city: CityEntity) {
+        deleteCityUseCase.deleteCities(city: city) {
+            print("Manage Success")
+        } error: {
+            print("Manage Error")
+        }
+    }
+    
+    func getCities() {
+        getCitiesUseCase.getCities(success: { cities in
+            var citiesDataStore = CitiesEntity()
+            citiesDataStore.cities = cities
+            self.cities.value = citiesDataStore
+        }, error: {
+            print("Manage Error")
+        })
     }
 }
 

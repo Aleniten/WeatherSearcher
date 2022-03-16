@@ -41,7 +41,7 @@ class DetailsCell: UITableViewCell {
         
         containerStackView.axis = .horizontal
         containerStackView.spacing = 10
-        containerStackView.distribution = .fillEqually
+        containerStackView.distribution = .fillProportionally
   
         dateLabel.numberOfLines = 1
         dateLabel.textAlignment = .left
@@ -70,8 +70,10 @@ class DetailsCell: UITableViewCell {
             self.minMaxLabel.text = "Min.: \(minTempText) - Max.: \(maxTempText)"
         }
         
-        let imageIcon = UIImage(systemName: icon!)?.withTintColor(Constants.Colors.blackColor, renderingMode: .alwaysOriginal)
-        self.weatherIcon.image = imageIcon
+        if let imageIcon = icon {
+            self.weatherIcon.image = UIImage(named: imageIcon)
+        }
+        
     }
     
     func layout() {
@@ -90,8 +92,8 @@ class DetailsCell: UITableViewCell {
             contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: containerStackView.trailingAnchor, multiplier: 1),
             contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: containerStackView.bottomAnchor, multiplier: 1),
 
-            weatherIcon.heightAnchor.constraint(equalToConstant: 32),
-            weatherIcon.widthAnchor.constraint(equalToConstant: 32),
+            weatherIcon.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeTiny),
+            weatherIcon.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeTiny),
             dateLabel.heightAnchor.constraint(equalToConstant: 32),
             minMaxLabel.heightAnchor.constraint(equalToConstant: 32),
 

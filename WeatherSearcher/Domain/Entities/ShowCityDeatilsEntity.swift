@@ -9,10 +9,13 @@ import Foundation
 
 struct ShowCityDetailsEntity {
     var consolidatedWeather: [ConsolidatedWeather]?
+    var lattLong: String?
+    var locationType: String?
     var temp: Double?
     var maxTemp: Double?
     var minTemp: Double?
     var weatherStateName: String?
+    var weatherStateAbbr: String?
     var parent: CityEntity?
     var sunRise: String?
     var sunSet: String?
@@ -25,24 +28,29 @@ struct ShowCityDetailsEntity {
     var favorite: Bool?
     
     var conditionName: String {
-        return "cloud.bolt"
-//        switch icon {
-//        case 200...232:
-//            return "cloud.bolt"
-//        case 300...321:
-//            return "cloud.drizzle"
-//        case 500...531:
-//            return "cloud.rain"
-//        case 600...622:
-//            return "cloud.snow"
-//        case 701...781:
-//            return "cloud.fog"
-//        case 800:
-//            return "sun.max"
-//        case 801...804:
-//            return "cloud.bolt"
-//        default:
-//            return "cloud"
-//        }
+        switch weatherStateAbbr {
+        case "sn":
+            return "icons8-snow-96"
+        case "sl":
+            return "icons8-sleet-96"
+        case "h":
+            return "icons8-hail-96"
+        case "t":
+            return "icons8-storm-with-heavy-rain-96"
+        case "hr":
+            return "icons8-heavy-rain-96"
+        case "lr":
+            return "icons8-light-rain-96"
+        case "s":
+            return "icons8-rain-cloud-96"
+        case "hc":
+            return "icons8-cloud-96"
+        case "lc":
+            return "icons8-partly-cloudy-day-96"
+        case "c":
+            return "icons8-sun-96"
+        default:
+            return "icons8-cloud-96"
+        }
     }
 }

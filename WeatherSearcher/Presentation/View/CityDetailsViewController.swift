@@ -24,6 +24,7 @@ class CityDetailsViewController: UIViewController {
     let iconTempStackView = UIStackView()
     let dataStackView = UIStackView()
     let leftStackView = UIStackView()
+    let containerStackView = UIStackView()
     
     let conditionImageView = UIImageView()
     let tempLabel = UILabel()
@@ -95,31 +96,27 @@ extension CityDetailsViewController {
         humityLabel.translatesAutoresizingMaskIntoConstraints = false
         windSpeedLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        containerStackView.translatesAutoresizingMaskIntoConstraints = false
         
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
         favoriteButton.addTarget(self, action: #selector(favoritePressed), for: .touchUpInside)
         
         iconTempStackView.axis = .vertical
-        iconTempStackView.spacing = 8
-        iconTempStackView.distribution = .fillEqually
+        iconTempStackView.spacing = 2
+        iconTempStackView.distribution = .fill
         
         dataStackView.axis = .vertical
-        dataStackView.spacing = 4
-        dataStackView.distribution = .fillEqually
-        dataStackView.alignment = .leading
+        dataStackView.spacing = 1
+        dataStackView.distribution = .fillProportionally
+        dataStackView.alignment = .center
         
         leftStackView.axis = .vertical
-        iconTempStackView.spacing = 8
-        iconTempStackView.distribution = .fillEqually
+        leftStackView.spacing = 2
+        leftStackView.distribution = .fillEqually
         
-//        rightStackView.axis = .horizontal
-//        rightStackView.spacing = 8
-//        rightStackView.distribution = .fillEqually
-//        rightStackView.alignment = .top
-        
-//        containerStackView.axis = .horizontal
-//        containerStackView.spacing = 4
-//        containerStackView.distribution = .fillEqually
+        containerStackView.axis = .horizontal
+        containerStackView.spacing = 0
+        containerStackView.distribution = .fillProportionally
         
         tempLabel.numberOfLines = 1
         tempLabel.textAlignment = .center
@@ -150,10 +147,12 @@ extension CityDetailsViewController {
     @objc func favoritePressed(_ sender: UIButton) {
         if let favoriteState = favorite {
             if favoriteState {
+                self.deleteCitiesFromUserDefaults()
                 let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
                 favoriteButton.setImage(imageIcon, for: .normal)
                 self.favorite = false
             } else {
+                self.saveCitiesFromUserDefaults()
                 let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
                 favoriteButton.setImage(imageIcon, for: .normal)
                 self.favorite = true
@@ -165,7 +164,14 @@ extension CityDetailsViewController {
         }
         
     }
-    
+    func saveCitiesFromUserDefaults() {
+        let cityToSave = CityEntity.init(lattLong: weatherDetail.lattLong, locationType: weatherDetail.locationType, title: weatherDetail.title, woeid: weatherDetail.woeid, favorite: true)
+        viewModel.saveCities(city: cityToSave)
+    }
+    func deleteCitiesFromUserDefaults() {
+        let cityToSave = CityEntity.init(lattLong: weatherDetail.lattLong, locationType: weatherDetail.locationType, title: weatherDetail.title, woeid: weatherDetail.woeid, favorite: false)
+        viewModel.saveCities(city: cityToSave)
+    }
     func configureView(_ favorite:Bool = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?) {
         if favorite {
             let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
@@ -174,8 +180,10 @@ extension CityDetailsViewController {
             let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
             favoriteButton.setImage(imageIcon, for: .normal)
         }
-        let imageIcon = UIImage(systemName: icon!)?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
-        self.conditionImageView.image = imageIcon
+        if let imageIcon = icon {
+            self.conditionImageView.image = UIImage(named: imageIcon)
+        }
+       
         
         if let tempDouble = temp {
             let tempText = String(format: "%.1f", tempDouble)
@@ -199,33 +207,37 @@ extension CityDetailsViewController {
     
     func layout() {
         iconTempStackView.addArrangedSubview(conditionImageView)
-        iconTempStackView.addArrangedSubview(tempLabel)
+//        iconTempStackView.addArrangedSubview(tempLabel)
+        dataStackView.addArrangedSubview(tempLabel)
         dataStackView.addArrangedSubview(minMaxTempLabel)
         dataStackView.addArrangedSubview(humityLabel)
         dataStackView.addArrangedSubview(windSpeedLabel)
+        
         leftStackView.addArrangedSubview(iconTempStackView)
         leftStackView.addArrangedSubview(dataStackView)
        
-        self.contentView.addSubview(leftStackView)
-        self.contentView.addSubview(favoriteButton)
-        
+        containerStackView.addArrangedSubview(leftStackView)
+        containerStackView.addArrangedSubview(favoriteButton)
+//        self.contentView.addSubview(leftStackView)
+//        self.contentView.addSubview(favoriteButton)
+        self.contentView.addSubview(containerStackView)
         self.view.addSubview(contentView)
         view.addSubview(tableView)
         NSLayoutConstraint.activate([
-            leftStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            leftStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
-            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: favoriteButton.trailingAnchor, multiplier: 1),
-            self.favoriteButton.bottomAnchor.constraint(equalToSystemSpacingBelow: self.contentView.bottomAnchor, multiplier: 4),
+            containerStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            containerStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: self.contentView.leadingAnchor, multiplier: 1),
+            self.contentView.trailingAnchor.constraint(equalToSystemSpacingAfter: containerStackView.trailingAnchor, multiplier: 1),
+            self.containerStackView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.contentView.bottomAnchor, multiplier: 0),
             leftStackView.trailingAnchor.constraint(equalToSystemSpacingAfter: self.favoriteButton.leadingAnchor, multiplier: 1),
             self.contentView.bottomAnchor.constraint(equalToSystemSpacingBelow: leftStackView.bottomAnchor, multiplier: 0),
-            conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
-            conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizelarge),
+            conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
+            conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
             favoriteButton.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
             favoriteButton.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeSmall),
             contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             contentView.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 0),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: contentView.trailingAnchor, multiplier: 0),
-            contentView.heightAnchor.constraint(equalToConstant: view.frame.size.height * 0.3),
+            contentView.heightAnchor.constraint(equalToConstant: view.frame.size.height * 0.4),
             tableView.topAnchor.constraint(equalToSystemSpacingBelow: contentView.bottomAnchor, multiplier: 0),
             tableView.leadingAnchor.constraint(equalToSystemSpacingAfter: view.leadingAnchor, multiplier: 0),
             view.trailingAnchor.constraint(equalToSystemSpacingAfter: tableView.trailingAnchor, multiplier: 0),

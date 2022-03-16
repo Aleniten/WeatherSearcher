@@ -39,7 +39,11 @@ class SearcherCitiesViewController: UIViewController {
         setup()
         style()
         layout()
+        getCitiesFromUserDefaults()
         
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        getCitiesFromUserDefaults()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -54,6 +58,11 @@ class SearcherCitiesViewController: UIViewController {
 }
 
 extension SearcherCitiesViewController {
+    
+    func getCitiesFromUserDefaults() {
+        viewModel.getCities()
+        self.tableView.reloadData()
+    }
     
     func setup() {
         tableView.dataSource = self

@@ -15,5 +15,10 @@ extension Resolver: ResolverRegistering {
         register { DefaultGetCityDetailsUseCase()}.implements(GetCityDetailsUseCaseProtocol.self)
         register { SearcherCitiesViewModel()}.implements(SearcherCitiesViewModelProtocol.self)
         register { DefaultWeatherRepository()}.implements(CitiesRepositoryProtocols.self)
+        register { UserDefaultsRepository()}.implements(UserDefaultsRepositoryProtocol.self)
+        register { DefaultSaveFavoritesUseCase()}.implements(SaveFavoritesUseCaseProtocols.self)
+        register { DefaultDeleteFavoritesUseCase()}.implements(DeleteFavoritesUseCaseProtocols.self)
+        register { DefaultGetFavoritesUseCase()}.implements(GetFavoritesUseCaseProtocols.self)
+
     }
 }
