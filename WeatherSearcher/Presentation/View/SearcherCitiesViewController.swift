@@ -72,26 +72,26 @@ extension SearcherCitiesViewController {
             if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
                 self?.showSpinner(superView, spinnerShowing)
             }
-            guard let cities = citiesBack else {
-                self?.getCitiesFromUserDefaults()
-                self?.viewModel.citySearched.observeNext(with: {[weak self] searched in
-                    if let citySearched = searched {
-                        self?.alertPresent(title: "Empty", "We couldn't find your city")
-                    }
-                })
-                return
-            }
-            if !cities.cities!.isEmpty || cities.cities != nil {
-                self?.citiesArray = cities
-                self?.tableView.reloadData()
-                self?.removeSpinner(0.5)
+            if let cities = citiesBack?.cities {
+                if !cities.isEmpty {
+                    self?.citiesArray = CitiesEntity.init(cities: cities)
+                    self?.tableView.reloadData()
+                    self?.removeSpinner(0.5)
+                } else {
+                    self?.viewModel.citySearched.observeNext(with: {[weak self] searched in
+                        if let citySearched = searched {
+                            self?.alertPresent(title: "Empty", "We couldn't find your city")
+                        }
+                    })
+                    self?.getCitiesFromUserDefaults()
+                }
             } else {
+                self?.getCitiesFromUserDefaults()
                 self?.viewModel.citySearched.observeNext(with: {[weak self] searched in
                     if let citySearched = searched {
                         self?.alertPresent(title: "Empty", "We couldn't find your city")
                     }
                 })
-                self?.getCitiesFromUserDefaults()
             }
         }).dispose(in: bag)
         NotificationCenter.default.addObserver(self, selector: #selector(self.incomingNotification(_:)), name: NSNotification.Name(rawValue: "searchedText"), object: nil)
