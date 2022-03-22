@@ -161,7 +161,6 @@ extension SearcherCitiesViewController: UITableViewDelegate, UITableViewDataSour
         let vc = CityDetailsViewController()
         vc.modalPresentationStyle = .overFullScreen
         vc.woeidToFill = cityWOEID
-
         self.navigationController?.pushViewController(vc, animated: true)
 
     }

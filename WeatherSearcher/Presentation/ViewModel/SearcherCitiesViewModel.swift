@@ -19,6 +19,7 @@ protocol SearcherCitiesViewModelProtocol {
     func deleteCities(city: CityEntity)
     func getCities()
     func populateTableViewWithFavoritesInSearch()
+    func restartSearchedValue()
     var cities: Observable<CitiesEntity?> { get }
     var city: Observable<CityDetailsEntity?> { get }
     var citySearched: Observable<Bool?> { get }
@@ -197,6 +198,10 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         }, error: {
             print("Manage Error")
         })
+    }
+    
+    func restartSearchedValue() {
+        self.citySearched.value = false
     }
 }
 

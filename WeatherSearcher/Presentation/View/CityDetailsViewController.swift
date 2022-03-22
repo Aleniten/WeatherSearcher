@@ -67,7 +67,7 @@ extension CityDetailsViewController {
     func setup() {
         tableView.dataSource = self
         tableView.delegate = self
-
+        viewModel.restartSearchedValue()
         viewModel.getCityDetails(woeid: woeidToFill ?? 0)
         
         viewModel.cityToshow.observeNext(with: {[weak self] cityToshow in
