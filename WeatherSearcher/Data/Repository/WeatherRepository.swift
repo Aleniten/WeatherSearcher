@@ -13,7 +13,9 @@ struct DefaultWeatherRepository: CitiesRepositoryProtocols {
     // Repository for api
     func getCities(city: String, success: @escaping (CitiesEntity) -> Void, error: @escaping () -> Void){
         
-        Alamofire.request("https://www.metaweather.com/api/location/search/?query=\(city)", method: .get).responseArray { (response: DataResponse<[CityDTO]>) in
+        let cityTrimming = city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let urlString = cityTrimming.replacingOccurrences(of: " ", with: "%20")
+        Alamofire.request("https://www.metaweather.com/api/location/search/?query=\(urlString)", method: .get).responseArray { (response: DataResponse<[CityDTO]>) in
             
             var citiesToShow = CitiesEntity.init(cities: [])
             guard let citiesDto = response.value else {

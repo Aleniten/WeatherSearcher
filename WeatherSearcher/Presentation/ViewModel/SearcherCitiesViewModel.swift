@@ -125,8 +125,6 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     func showCityDetails(cityToShow: CityDetailsEntity,_ isFavorite: Bool) {
         // Use Dates components to retrieve the data from today and use in first view of CityDetailsViewController
         let date = Date()
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: date)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let currentDate = dateFormatter.string(from: date)
