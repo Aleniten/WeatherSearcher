@@ -37,9 +37,6 @@ class CityDetailsViewController: BaseViewController {
     let windSpeedLabel = UILabel()
     let backgroundView = UIImageView()
     
-    let favoriteButton = UIButton()
-    
-    let buttonContainer = UIView()
     let contentView = UIView()
     var backgroundImage = UIView()
     
@@ -88,7 +85,20 @@ extension CityDetailsViewController {
                 return }
             self?.weatherDetail = cityDetails
             self?.title = cityDetails.title
-            self?.configureView(cityDetails.favorite, cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0, cityDetails.weatherStateName, isDaylight: cityDetails.isDayLight)
+            self?.configureView(cityDetails.conditionName, cityDetails.temp, cityDetails.minTemp, cityDetails.maxTemp, cityDetails.humidity, cityDetails.windSpeed ?? 0, cityDetails.weatherStateName, isDaylight: cityDetails.isDayLight)
+            var image = UIImage(named: "star.fill")?.withRenderingMode(.alwaysOriginal)
+            if let isFavorite = cityDetails.favorite {
+                if isFavorite {
+                    image = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
+                } else {
+                    image = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
+                }
+                
+            } else {
+                image = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
+            }
+            
+            self?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(self?.favoritePressed))
             if let favoriteObj = cityToshow?.favorite {
                 self?.favorite = favoriteObj
             } else {
@@ -118,13 +128,7 @@ extension CityDetailsViewController {
         windSpeedLabel.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         containerStackView.translatesAutoresizingMaskIntoConstraints = false
-        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
         backgroundImage.translatesAutoresizingMaskIntoConstraints = false
-        
-        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
-        favoriteButton.addTarget(self, action: #selector(favoritePressed), for: .touchUpInside)
-        buttonContainer.backgroundColor = .clear
-        
         iconTempStackView.axis = .vertical
         iconTempStackView.spacing = 2
         iconTempStackView.distribution = .fillProportionally
@@ -208,20 +212,17 @@ extension CityDetailsViewController {
             if favoriteState {
                 self.deleteCitiesFromUserDefaults()
                 let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.wetAsphalt, renderingMode: .alwaysOriginal)
-                
-                favoriteButton.setImage(imageIcon, for: .normal)
+                self.navigationItem.rightBarButtonItem?.image = imageIcon
                 self.favorite = false
             } else {
                 self.saveCitiesFromUserDefaults()
                 let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
-                
-                favoriteButton.setImage(imageIcon, for: .normal)
+                self.navigationItem.rightBarButtonItem?.image = imageIcon
                 self.favorite = true
             }
         } else {
             let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
-            
-            favoriteButton.setImage(imageIcon, for: .normal)
+            self.navigationItem.rightBarButtonItem?.image = imageIcon
             self.favorite = true
         }
         
@@ -279,7 +280,7 @@ extension CityDetailsViewController {
         }).dispose(in: bag)
     }
     // MARK: -  Function to configure FirstView with Data
-    func configureView(_ favorite: Bool? = false,_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?, isDaylight: Bool?) {
+    func configureView(_ icon: String?,_ temp: Double?,_ minTemp: Double?,_ maxTemp: Double?,_ humity: Int?,_ windSpeed: Double?,_ weatherState: String?, isDaylight: Bool?) {
         var tempDaylight: Bool = true
         let colorText = UIColor.white
         if let isDaylightUnwrapped = isDaylight {
@@ -294,20 +295,6 @@ extension CityDetailsViewController {
             backgroundView.image = UIImage(named: "day-background")
         }
         
-        
-        if let isFavorite = favorite {
-            if isFavorite {
-                let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.favoriteYellow, renderingMode: .alwaysOriginal)
-                favoriteButton.setImage(imageIcon, for: .normal)
-            } else {
-                let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
-                favoriteButton.setImage(imageIcon, for: .normal)
-            }
-            
-        } else {
-            let imageIcon = UIImage(systemName: "star.fill")?.withTintColor(Constants.Colors.whiteGray, renderingMode: .alwaysOriginal)
-            favoriteButton.setImage(imageIcon, for: .normal)
-        }
         if let imageIcon = icon {
             self.conditionImageView.image = UIImage(named: imageIcon)
         }
@@ -357,11 +344,7 @@ extension CityDetailsViewController {
     // MARK: -  Layout of Views
     
     func layout() {
-        buttonContainer.addSubview(favoriteButton)
-        
         leftStackView.addArrangedSubview(weatherStateLabel)
-        leftStackView.addArrangedSubview(buttonContainer)
-        
         dataStackView.addArrangedSubview(tempLabel)
         dataStackView.addArrangedSubview(minMaxTempLabel)
         dataStackView.addArrangedSubview(humityLabel)
@@ -382,12 +365,6 @@ extension CityDetailsViewController {
         NSLayoutConstraint.activate([
             conditionImageView.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
             conditionImageView.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
-            favoriteButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-            favoriteButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor),
-            favoriteButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor),
-            favoriteButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor),
-            buttonContainer.heightAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
-            buttonContainer.widthAnchor.constraint(equalToConstant: Constants.LocalSpacing.buttonSizeLarge),
             backgroundView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
