@@ -34,16 +34,21 @@ class BaseViewController: UIViewController {
         return nil
     }
     // func to show spinner
-    func showSpinner(_ superView: UIView, _ isShowing: Bool){
-        if !isShowing {
+    func showSpinner(_ superView: UIView){
+        if !spinner.isShowing {
             self.spinner.display(onView: superView)
         }
+//        if !isShowing {
+//
+//        }
     }
     // func to remove spinner
     func removeSpinner(_ delay: Double) {
-        self.delay(delay, closure: {
-            self.spinner.remove()
-        })
+        if spinner.isShowing {
+            self.delay(delay, closure: {
+                self.spinner.remove()
+            })
+        }
     }
     // func to delay actions i use to remove the spinner spinner because data was getting to quickly
     func delay (_ delay: Double, closure: @escaping () -> ()) {

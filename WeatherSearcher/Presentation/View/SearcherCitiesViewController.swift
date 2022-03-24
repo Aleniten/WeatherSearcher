@@ -37,13 +37,13 @@ class SearcherCitiesViewController: BaseViewController {
         setup()
         style()
         layout()
-        getCitiesFromUserDefaults()
         
     }
     override func viewWillAppear(_ animated: Bool) {
         getCitiesFromUserDefaults()
         // Title dissapear because we empty in viewcycle willdisappear
         self.title = "Weather App"
+        getCitiesFromUserDefaults()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -59,7 +59,7 @@ class SearcherCitiesViewController: BaseViewController {
 extension SearcherCitiesViewController {
     // MARK: -  Function to get cities from data store
     func getCitiesFromUserDefaults() {
-        self.showSpinner(self.view, self.spinner.isShowing)
+        self.showSpinner(self.view)
         viewModel.getCities()
         self.tableView.reloadData()
         self.removeSpinner(0.5)
@@ -69,8 +69,8 @@ extension SearcherCitiesViewController {
         tableView.dataSource = self
         tableView.delegate = self
         viewModel.cities.observeNext(with: {[weak self] citiesBack in
-            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
-                self?.showSpinner(superView, spinnerShowing)
+            if let superView = self?.view {
+                self?.showSpinner(superView)
             }
             if let cities = citiesBack?.cities {
                 if !cities.isEmpty {
@@ -80,6 +80,7 @@ extension SearcherCitiesViewController {
                 } else {
                     self?.viewModel.citySearched.observeNext(with: {[weak self] searched in
                         if let citySearched = searched {
+                            self?.removeSpinner(0.5)
                             self?.alertPresent(title: "Empty", "We couldn't find your city")
                         }
                     })

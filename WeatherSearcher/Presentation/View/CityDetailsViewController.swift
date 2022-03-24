@@ -58,7 +58,6 @@ class CityDetailsViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.showSpinner(self.view, self.spinner.isShowing)
     }
 }
 // MARK: - Extension of View Controller
@@ -71,8 +70,8 @@ extension CityDetailsViewController {
         viewModel.getCityDetails(woeid: woeidToFill ?? 0)
         
         viewModel.cityToshow.observeNext(with: {[weak self] cityToshow in
-            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
-                self?.showSpinner(superView, spinnerShowing)
+            if let superView = self?.view {
+                self?.showSpinner(superView)
             }
             guard let cityDetails = cityToshow else {
                 self?.viewModel.cityDetailsRequestEncounter.observeNext(with: {[weak self] requestDetails in
@@ -238,8 +237,8 @@ extension CityDetailsViewController {
         cityToSave.favorite = true
         viewModel.saveCities(city: cityToSave)
         viewModel.savedFavoritesState.observeNext(with: {[weak self] saved in
-            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
-                self?.showSpinner(superView, spinnerShowing)
+            if let superView = self?.view {
+                self?.showSpinner(superView)
             }
             self?.removeSpinner(0.5)
             if let savedCity = saved {
@@ -264,8 +263,8 @@ extension CityDetailsViewController {
         
         viewModel.deleteCities(city: cityToDelete)
         viewModel.deletedFavoriteState.observeNext(with: {[weak self] deleted in
-            if let spinnerShowing = self?.spinner.isShowing, let superView = self?.view {
-                self?.showSpinner(superView, spinnerShowing)
+            if let superView = self?.view {
+                self?.showSpinner(superView)
             }
             self?.removeSpinner(0.5)
             

@@ -28,6 +28,7 @@ protocol SearcherCitiesViewModelProtocol {
     var deletedFavoriteState: Observable<Bool?> { get }
     var cityToshow: Observable<ShowCityDetailsEntity?> { get set }
     var error: Observable<String?> { get }
+    var citiesFromUserDefault: Observable<CitiesEntity?> { get }
 }
 // MARK: - ViewModel
 class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
@@ -41,6 +42,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
     var citySearched: Observable<Bool?> = Observable(nil)
     var cityDetailsRequestEncounter: Observable<Bool?> = Observable(nil)
     var error: Observable<String?> = Observable(nil)
+    var citiesFromUserDefault: Observable<CitiesEntity?> = Observable(nil)
     
     // MARK: - Injections
     
@@ -183,7 +185,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         getCitiesUseCase.getCities(success: { cities in
             var citiesDataStore = CitiesEntity()
             citiesDataStore.cities = cities
-            self.cities.value = citiesDataStore
+            self.citiesWithFavorites = citiesDataStore
         }, error: {
             print("Manage Error")
         })
