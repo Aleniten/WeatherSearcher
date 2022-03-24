@@ -40,7 +40,6 @@ class SearcherCitiesViewController: BaseViewController {
         
     }
     override func viewWillAppear(_ animated: Bool) {
-        getCitiesFromUserDefaults()
         // Title dissapear because we empty in viewcycle willdisappear
         self.title = "Weather App"
         getCitiesFromUserDefaults()
@@ -95,6 +94,13 @@ extension SearcherCitiesViewController {
                 })
             }
         }).dispose(in: bag)
+        
+        viewModel.citiesFromUserDefault.observeNext(with: {[weak self] citiesDefault in
+            if let citiesFromDefault = citiesDefault, let cities = citiesFromDefault.cities {
+                self?.citiesArray.cities = cities
+                self?.tableView.reloadData()
+            }
+        })
         NotificationCenter.default.addObserver(self, selector: #selector(self.incomingNotification(_:)), name: NSNotification.Name(rawValue: "searchedText"), object: nil)
     }
     // MARK: -  Styles and configuration of views

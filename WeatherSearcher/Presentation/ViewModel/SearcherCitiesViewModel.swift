@@ -185,7 +185,7 @@ class SearcherCitiesViewModel: SearcherCitiesViewModelProtocol {
         getCitiesUseCase.getCities(success: { cities in
             var citiesDataStore = CitiesEntity()
             citiesDataStore.cities = cities
-            self.citiesWithFavorites = citiesDataStore
+            self.citiesFromUserDefault.value = citiesDataStore
         }, error: {
             print("Manage Error")
         })
